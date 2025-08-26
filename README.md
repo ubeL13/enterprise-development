@@ -1,5 +1,5 @@
 # Разработка корпоративных приложений
-[Таблица с успеваемостью]()
+[Таблица с успеваемостью](https://docs.google.com/spreadsheets/d/1JD6aiOG6r7GrA79oJncjgUHWtfeW4g_YZ9ayNgxb_w0/edit?usp=sharing)
 
 ## Задание
 ### Цель
