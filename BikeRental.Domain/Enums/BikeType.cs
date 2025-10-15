@@ -28,6 +28,8 @@ namespace BikeRental.Domain.Enums
         /// <summary>
         /// Electric bike — equipped with an electric motor assist.
         /// </summary>
-        Electric
+        Electric,
+        City,
+        Sport
     }
 }
