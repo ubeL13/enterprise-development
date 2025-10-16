@@ -1,35 +1,34 @@
-namespace BikeRental.Domain.Enums
+namespace BikeRental.Domain.Enums;
+
+/// <summary>
+/// Enumeration of available bike types.
+/// </summary>
+public enum BikeType
 {
     /// <summary>
-    /// Enumeration of available bike types.
+    /// Road bike — designed for speed on paved roads.
     /// </summary>
-    public enum BikeType
-    {
-        /// <summary>
-        /// Road bike — designed for speed on paved roads.
-        /// </summary>
-        Road,
+    Road,
 
-        /// <summary>
-        /// Mountain bike — suitable for off-road riding.
-        /// </summary>
-        Mountain,
+    /// <summary>
+    /// Mountain bike — suitable for off-road riding.
+    /// </summary>
+    Mountain,
 
-        /// <summary>
-        /// Hybryd bike - designed primarily for paved roads and light off-road terrain, prioritising comfort and versatility
-        /// </summary>
-        Hybrid,
+    /// <summary>
+    /// Hybryd bike - designed primarily for paved roads and light off-road terrain, prioritising comfort and versatility
+    /// </summary>
+    Hybrid,
 
-        /// <summary>
-        /// BMX bike - 
-        /// </summary>
-        BMX,
+    /// <summary>
+    /// BMX bike - 
+    /// </summary>
+    BMX,
 
-        /// <summary>
-        /// Electric bike — equipped with an electric motor assist.
-        /// </summary>
-        Electric,
-        City,
-        Sport
-    }
+    /// <summary>
+    /// Electric bike — equipped with an electric motor assist.
+    /// </summary>
+    Electric,
+    City,
+    Sport
 }
