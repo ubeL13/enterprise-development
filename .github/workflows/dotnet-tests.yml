@@ -1,4 +1,4 @@
-name: .NET Tests
+name: .NET Tests Simple
 
 on:
   push:
@@ -7,23 +7,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
-
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Build solution
-      run: dotnet build --configuration Release --no-restore
-
-    - name: Run tests
-      run: dotnet test ./BikeRental.tests/BikeRental.tests.csproj --no-build --verbosity normal
+        dotnet-version: 8.0.x
+    
+    - name: Run tests directly
+      run: |
+        cd BikeRental.tests
+        dotnet restore
+        dotnet build
+        dotnet test --verbosity normal
