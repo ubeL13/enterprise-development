@@ -21,14 +21,22 @@ public enum BikeType
     Hybrid,
 
     /// <summary>
-    /// BMX bike - 
+    /// BMX bike - for performing tricks using trampolines
     /// </summary>
-    BMX,
+    Bmx,
 
     /// <summary>
     /// Electric bike — equipped with an electric motor assist.
     /// </summary>
     Electric,
+
+    /// <summary>
+    /// City bike — designed for driving in the city, on paved roads.
+    /// </summary>
     City,
+
+    /// <summary>
+    /// Sport bike — a motorcycle optimized for speed, acceleration, braking, and maneuverability on race tracks.
+    /// </summary>
     Sport
 }
