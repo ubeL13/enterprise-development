@@ -1,8 +1,4 @@
-using BikeRental.Domain;
-using Xunit;
-using System.Collections.Generic;
-using System.Linq;
-using BikeRental.Domain.Models;
+﻿using BikeRental.Domain.Models;
 using BikeRental.Domain.Enums;
 
 namespace BikeRental.Tests;
@@ -26,7 +22,7 @@ public class RentalTests
     public void Should_Find_All_Sport_Bikes()
     {
         var sportBikes = _models.Where(m => m.Type == BikeType.Sport).ToList();
-        Assert.NotEmpty(sportBikes);
+        Assert.Equal(2, sportBikes.Count);
     }
 
     [Fact]
@@ -43,7 +39,9 @@ public class RentalTests
             .Take(5)
             .ToList();
 
-        Assert.True(top5.Count <= 5);
+        var topModel = top5.First();
+        Assert.Equal("TurboSport", topModel.Model.Name);
+        Assert.Equal(180, topModel.Profit);
     }
 
     [Fact]
@@ -60,17 +58,26 @@ public class RentalTests
             .Take(5)
             .ToList();
 
-        Assert.True(top5.Count <= 5);
+        var top1 = top5.First();
+        var top2 = top5.Skip(1).First();
+
+        Assert.Equal("Urban 2000", top1.Model.Name);
+        Assert.Equal(7, top1.TotalDuration);
+        Assert.Equal("TurboSport", top2.Model.Name);
+        Assert.Equal(6, top2.TotalDuration);
     }
 
     [Fact]
     public void Should_Find_Min_Max_Avg_Rental_Duration()
     {
-        var min = _rentals.Min(r => r.DurationHours);
-        var max = _rentals.Max(r => r.DurationHours);
-        var avg = _rentals.Average(r => r.DurationHours);
+        var durations = _rentals.Select(r => r.DurationHours).ToList();
+        var min = durations.Min(); 
+        var max = durations.Max(); 
+        var avg = durations.Average(); 
 
-        Assert.True(min <= avg && avg <= max);
+        Assert.Equal(1, min);
+        Assert.Equal(7, max);
+        Assert.Equal(4.0, avg);
     }
 
     [Fact]
@@ -81,7 +88,8 @@ public class RentalTests
             .Select(g => new { Type = g.Key, TotalHours = g.Sum(r => r.DurationHours) })
             .ToList();
 
-        Assert.NotEmpty(sumByType);
+        var sportHours = sumByType.First(x => x.Type == BikeType.Sport).TotalHours;
+        Assert.Equal(9, sportHours);
     }
 
     [Fact]
@@ -94,6 +102,6 @@ public class RentalTests
             .Select(g => g.Key.FullName)
             .ToList();
 
-        Assert.NotEmpty(topRenters);
+        Assert.Equal(new[] { "Иванов Иван", "Петров Пётр", "Сидоров Сидор" }, topRenters);
     }
 }
