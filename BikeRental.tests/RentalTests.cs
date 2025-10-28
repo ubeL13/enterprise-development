@@ -1,34 +1,28 @@
-﻿using BikeRental.Domain.Models;
-using BikeRental.Domain.Enums;
+﻿using BikeRental.Domain.Enums;
+using BikeRental.tests;
 
 namespace BikeRental.Tests;
 
-public class RentalTests
+public class RentalTests : IClassFixture<RentalFixture>
 {
-    private readonly List<BikeModel> _models;
-    private readonly List<Bike> _bikes;
-    private readonly List<Renter> _renters;
-    private readonly List<Rental> _rentals;
+    private readonly RentalFixture _fixture;
 
-    public RentalTests()
+    public RentalTests(RentalFixture fixture)
     {
-        _models = DataSeeder.GetBikeModels();
-        _renters = DataSeeder.GetRenters();
-        _bikes = DataSeeder.GetBikes(_models);
-        _rentals = DataSeeder.GetRentals(_bikes, _renters);
+        _fixture = fixture;
     }
 
     [Fact]
     public void Should_Find_All_Sport_Bikes()
     {
-        var sportBikes = _models.Where(m => m.Type == BikeType.Sport).ToList();
+        var sportBikes = _fixture.Models.Where(m => m.Type == BikeType.Sport).ToList();
         Assert.Equal(2, sportBikes.Count);
     }
 
     [Fact]
     public void Should_Calculate_Top5_Models_By_Profit()
     {
-        var top5 = _rentals
+        var top5 = _fixture.Rentals
             .GroupBy(r => r.Bike.Model)
             .Select(g => new
             {
@@ -47,7 +41,7 @@ public class RentalTests
     [Fact]
     public void Should_Calculate_Top5_Models_By_Duration()
     {
-        var top5 = _rentals
+        var top5 = _fixture.Rentals
             .GroupBy(r => r.Bike.Model)
             .Select(g => new
             {
@@ -70,7 +64,7 @@ public class RentalTests
     [Fact]
     public void Should_Find_Min_Max_Avg_Rental_Duration()
     {
-        var durations = _rentals.Select(r => r.DurationHours).ToList();
+        var durations = _fixture.Rentals.Select(r => r.DurationHours).ToList();
         var min = durations.Min(); 
         var max = durations.Max(); 
         var avg = durations.Average(); 
@@ -83,7 +77,7 @@ public class RentalTests
     [Fact]
     public void Should_Sum_Rental_Time_By_BikeType()
     {
-        var sumByType = _rentals
+        var sumByType = _fixture.Rentals
             .GroupBy(r => r.Bike.Model.Type)
             .Select(g => new { Type = g.Key, TotalHours = g.Sum(r => r.DurationHours) })
             .ToList();
@@ -95,7 +89,7 @@ public class RentalTests
     [Fact]
     public void Should_Find_Top_Renters_By_Usage()
     {
-        var topRenters = _rentals
+        var topRenters = _fixture.Rentals
             .GroupBy(r => r.Renter)
             .OrderByDescending(g => g.Count())
             .Take(3)
