@@ -19,34 +19,31 @@
   Поля: `Id`, `FullName`, `Phone`.
 
 - **Rental** — факт аренды велосипеда.  
-  Поля: `Id`, `Bike`, `Renter`, `StartTime`, `DurationHours`, метод `GetTotalPrice()` для расчёта стоимости аренды.
+  Поля: `Id`, `Bike`, `Renter`, `StartTime`, `DurationHours`
 
-- **BikeType (Enum)** — перечисление типов велосипедов (например: `Road`, `Mountain`, `Hybrid`, `BMX`, `Electric`).
+- **BikeType (Enum)** — перечисление типов велосипедов 
 
 DataSeeder — это вспомогательный класс, который создаёт тестовые данные.
+RentalFixture — это класс, который один раз создаёт общие тестовые данны и передаёт их во все тесты.
 
 
 ### Unit-тесты
-- **GetAllSportBikes_ReturnsOnlySportModels()**
 
-Проверяет, что запрос возвращает только спортивные велосипеды.
+- **ShouldFindAllSportBikes**
+Проверяет, что возвращаются только модели велосипедов типа Sport.
 
-- **GetTop5ModelsByProfit_ReturnsCorrectOrder()**
+- **ShouldCalculateTop5ModelsByProfit**
+Считает топ-5 моделей по прибыли от аренды (на основе HourlyRate * DurationHours) и проверяет порядок моделей.
 
-Считает топ-5 моделей по прибыли от аренды (на основе цены * часов).
+- **ShouldCalculateTop5ModelsByDuration**
+Считает топ-5 моделей по суммарной длительности аренды и проверяет порядок моделей.
 
-- **GetTop5ModelsByDuration_ReturnsCorrectOrder()**
-
-Считает топ-5 моделей по длительности аренды.
-
-- **GetMinMaxAverageRentalTime_ReturnsCorrectValues()**
-
+- **ShouldFindMinMaxAvgRentalDuration**
 Вычисляет минимальное, максимальное и среднее время аренды среди всех записей.
 
-- **GetTotalRentalTimeByType_ReturnsCorrectSum()**
+- **ShouldSumRentalTimeByBikeType**
+Считает суммарное время аренды по каждому типу велосипеда и проверяет соответствие ожидаемым значениям.
 
-Считает суммарное время аренды по каждому типу велосипеда.
+- **ShouldFindTopRentersByUsage**
+Определяет топ-3 арендатора по количеству аренд и проверяет их имена.
 
-- **GetTopRentersByCount_ReturnsCorrectClients()**
-
-Определяет арендаторов, которые чаще всего брали велосипеды в прокат.
