@@ -16,7 +16,7 @@ public class RentalTests : IClassFixture<RentalFixture>
     /// Checks that all models of type Sport are correctly found.
     /// </summary>
     [Fact]
-    public void ShouldFindAllSport_Bikes()
+    public void ShouldFindAllSportBikes()
     {
         List<string> expected =  ["SpeedMax", "TurboSport" ];
 
