@@ -3,15 +3,9 @@ using BikeRental.tests;
 
 namespace BikeRental.Tests;
 
-public class RentalTests : IClassFixture<RentalFixture>
+public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
 {
-    private readonly RentalFixture _fixture;
-
-    public RentalTests(RentalFixture fixture)
-    {
-        _fixture = fixture;
-    }
-
+    
     /// <summary>
     /// Checks that all models of type Sport are correctly found.
     /// </summary>
@@ -20,7 +14,7 @@ public class RentalTests : IClassFixture<RentalFixture>
     {
         List<string> expected =  ["SpeedMax", "TurboSport" ];
 
-            var actual = _fixture.Models
+            var actual = fixture.Models
                 .Where(m => m.Type == BikeType.Sport)
                 .Select(m => m.Name)
                 .OrderBy(n => n)
@@ -44,11 +38,11 @@ public class RentalTests : IClassFixture<RentalFixture>
             "Urban 2000"
         ];
 
-        var actual = _fixture.Rentals
+        var actual = fixture.Rentals
             .GroupBy(r => r.Bike.Model)
             .Select(g => new
             {
-                Name = g.Key.Name,
+                g.Key.Name,
                 Profit = g.Sum(r => r.Bike.Model.HourlyRate * r.DurationHours)
             })
             .OrderByDescending(x => x.Profit)
@@ -74,11 +68,11 @@ public class RentalTests : IClassFixture<RentalFixture>
             "EcoBike"
         ];
 
-        var actual = _fixture.Rentals
+        var actual = fixture.Rentals
             .GroupBy(r => r.Bike.Model)
             .Select(g => new
             {
-                Name = g.Key.Name,
+                g.Key.Name,
                 Duration = g.Sum(r => r.DurationHours)
             })
             .OrderByDescending(x => x.Duration)
@@ -95,7 +89,7 @@ public class RentalTests : IClassFixture<RentalFixture>
     [Fact]
     public void ShouldFindMinMaxAvgRentalDuration()
     {
-        var durations = _fixture.Rentals.Select(r => r.DurationHours).ToList();
+        var durations = fixture.Rentals.Select(r => r.DurationHours).ToList();
 
         var min = 1;
         var max = 7; 
@@ -117,7 +111,7 @@ public class RentalTests : IClassFixture<RentalFixture>
     [InlineData(BikeType.Sport, 9)]
     public void ShouldSumRentalTimeByBikeType(BikeType bikeType, int expected)
     {
-        var actual = _fixture.Rentals
+        var actual = fixture.Rentals
             .Where(r => r.Bike.Model.Type == bikeType)
             .Sum(r => r.DurationHours);
 
@@ -136,7 +130,7 @@ public class RentalTests : IClassFixture<RentalFixture>
             "Сидоров Сидор" 
         ];
 
-        var actual  = _fixture.Rentals
+        var actual  = fixture.Rentals
             .GroupBy(r => r.Renter)
             .OrderByDescending(g => g.Count())
             .Take(3)
