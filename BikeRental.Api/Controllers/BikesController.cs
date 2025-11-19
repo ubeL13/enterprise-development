@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using BikeRental.Infrastructure.Repositories;
+using BikeRental.Api.DTOs;
 using BikeRental.Domain.Models;
+using BikeRental.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Controllers;
 
@@ -8,23 +9,42 @@ namespace BikeRental.Api.Controllers;
 [Route("api/[controller]")]
 public class BikesController : ControllerBase
 {
-    private readonly BikeRepository _repo;
+    private readonly IRepository<Bike> _bikes;
 
-    public BikesController(BikeRepository repo)
+    public BikesController(IRepository<Bike> bikes)
     {
-        _repo = repo;
+        _bikes = bikes;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
+        => Ok(await _bikes.GetAllAsync());
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(Guid id)
     {
-        return Ok(await _repo.GetAllAsync());
+        var bike = await _bikes.GetByIdAsync(id);
+        return bike is null ? NotFound() : Ok(bike);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Bike bike)
+    public async Task<IActionResult> Create(BikeDto dto)
     {
-        await _repo.CreateAsync(bike);
+        var bike = new Bike
+        {
+            Color = dto.Color,
+            SerialNumber = dto.SerialNumber,
+            Model = new BikeModel { Id = dto.ModelId }
+        };
+
+        await _bikes.CreateAsync(bike);
         return Ok(bike);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _bikes.DeleteAsync(id);
+        return NoContent();
     }
 }
