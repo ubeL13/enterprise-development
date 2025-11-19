@@ -1,3 +1,6 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace BikeRental.Domain.Models;
 
 /// <summary>
@@ -8,6 +11,8 @@ public class Bike
     /// <summary>
     /// Unique identifier of the bike.
     /// </summary>
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
     public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
@@ -23,5 +28,9 @@ public class Bike
     /// <summary>
     /// Model describing the technical characteristics and pricing of this bike.
     /// </summary>
-    public required BikeModel Model { get; set; }
+    [BsonRepresentation(BsonType.String)]
+    public Guid ModelId { get; set; }
+
+    [BsonIgnore]
+    public BikeModel? Model { get; set; }
 }

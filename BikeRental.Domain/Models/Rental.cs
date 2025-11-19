@@ -1,3 +1,6 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace BikeRental.Domain.Models;
 
 /// <summary>
@@ -8,17 +11,27 @@ public class Rental
     /// <summary>
     /// Unique identifier of the rental.
     /// </summary>
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
     public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
     /// The bike that was rented.
     /// </summary>
-    public required Bike Bike { get; set; }
+    [BsonRepresentation(BsonType.String)]
+    public Guid BikeId { get; set; }
+
+    [BsonIgnore]
+    public Bike? Bike { get; set; }
 
     /// <summary>
     /// The renter who took the bike.
     /// </summary>
-    public required Renter Renter { get; set; }
+    [BsonRepresentation(BsonType.String)]
+    public Guid RenterId { get; set; }
+
+    [BsonIgnore]
+    public Renter? Renter { get; set; }
 
     /// <summary>
     /// The start date and time of the rental.

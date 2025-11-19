@@ -1,0 +1,4 @@
+show ip protocols
+show ip eigrp neighbors
+show ip eigrp interfaces
+show running-config | section eigrp
