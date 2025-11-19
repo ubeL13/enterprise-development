@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using BikeRental.Domain.Models;
+using BikeRental.Infrastructure.Settings;
 
 namespace BikeRental.Infrastructure.Repositories;
 

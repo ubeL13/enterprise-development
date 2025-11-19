@@ -1,5 +1,6 @@
 using BikeRental.Infrastructure;
 using BikeRental.Infrastructure.Repositories;
+using BikeRental.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
