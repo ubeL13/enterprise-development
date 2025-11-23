@@ -1,4 +1,4 @@
-using BikeRental.Api.DTOs;
+using BikeRental.Api.DTO;
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +10,17 @@ namespace BikeRental.Api.Controllers;
 public class RentalsController : ControllerBase
 {
     private readonly IRepository<Rental> _rentals;
+    private readonly IRepository<Bike> _bikes;
+    private readonly IRepository<Renter> _renters;
 
-    public RentalsController(IRepository<Rental> rentals)
+    public RentalsController(
+        IRepository<Rental> rentals,
+        IRepository<Bike> bikes,
+        IRepository<Renter> renters)
     {
         _rentals = rentals;
+        _bikes = bikes;
+        _renters = renters;
     }
 
     [HttpGet]
@@ -23,10 +30,18 @@ public class RentalsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(RentalDto dto)
     {
+        var bike = await _bikes.GetByIdAsync(dto.BikeId);
+        if (bike == null)
+            return NotFound($"Bike with id {dto.BikeId} not found");
+
+        var renter = await _renters.GetByIdAsync(dto.RenterId);
+        if (renter == null)
+            return NotFound($"Renter with id {dto.RenterId} not found");
+
         var rental = new Rental
         {
-            Bike = new Bike { Id = dto.BikeId },
-            Renter = new Renter { Id = dto.RenterId },
+            Bike = bike,
+            Renter = renter,
             StartTime = dto.StartTime,
             DurationHours = dto.DurationHours
         };

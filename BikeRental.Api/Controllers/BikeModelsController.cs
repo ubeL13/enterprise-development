@@ -1,4 +1,5 @@
-using BikeRental.Api.DTOs;
+using BikeRental.Api.DTO;
+using BikeRental.Domain.Enums;
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,13 @@ public class BikeModelsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(BikeModelDto dto)
     {
+        if (!Enum.TryParse<BikeType>(dto.Type, true, out var bikeType))
+            return BadRequest($"Unknown bike type: {dto.Type}");
+
         var model = new BikeModel
         {
             Name = dto.Name,
-            Type = dto.Type,
+            Type = bikeType,
             WheelSize = dto.WheelSize,
             BikeWeight = dto.BikeWeight,
             MaxRiderWeight = dto.MaxRiderWeight,

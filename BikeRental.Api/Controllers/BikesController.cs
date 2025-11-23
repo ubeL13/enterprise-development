@@ -1,4 +1,4 @@
-using BikeRental.Api.DTOs;
+using BikeRental.Api.DTO;
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +10,12 @@ namespace BikeRental.Api.Controllers;
 public class BikesController : ControllerBase
 {
     private readonly IRepository<Bike> _bikes;
+    private readonly IRepository<BikeModel> _models;
 
-    public BikesController(IRepository<Bike> bikes)
+    public BikesController(IRepository<Bike> bikes, IRepository<BikeModel> models)
     {
         _bikes = bikes;
+        _models = models;
     }
 
     [HttpGet]
@@ -21,7 +23,7 @@ public class BikesController : ControllerBase
         => Ok(await _bikes.GetAllAsync());
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> Get(string id)
     {
         var bike = await _bikes.GetByIdAsync(id);
         return bike is null ? NotFound() : Ok(bike);
@@ -30,11 +32,16 @@ public class BikesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(BikeDto dto)
     {
+        // Проверяем, есть ли такой BikeModel
+        var model = await _models.GetByIdAsync(dto.ModelId);
+        if (model == null)
+            return BadRequest($"BikeModel with id {dto.ModelId} not found");
+
         var bike = new Bike
         {
             Color = dto.Color,
             SerialNumber = dto.SerialNumber,
-            Model = new BikeModel { Id = dto.ModelId }
+            ModelId = dto.ModelId
         };
 
         await _bikes.CreateAsync(bike);
@@ -42,7 +49,7 @@ public class BikesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(string id)
     {
         await _bikes.DeleteAsync(id);
         return NoContent();

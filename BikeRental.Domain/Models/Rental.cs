@@ -13,13 +13,13 @@ public class Rental
     /// </summary>
     [BsonId]
     [BsonRepresentation(BsonType.String)]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
 
     /// <summary>
     /// The bike that was rented.
     /// </summary>
     [BsonRepresentation(BsonType.String)]
-    public Guid BikeId { get; set; }
+    public string BikeId { get; set; }
 
     [BsonIgnore]
     public Bike? Bike { get; set; }
@@ -28,7 +28,7 @@ public class Rental
     /// The renter who took the bike.
     /// </summary>
     [BsonRepresentation(BsonType.String)]
-    public Guid RenterId { get; set; }
+    public string RenterId { get; set; }
 
     [BsonIgnore]
     public Renter? Renter { get; set; }

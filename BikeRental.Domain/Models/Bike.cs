@@ -13,7 +13,7 @@ public class Bike
     /// </summary>
     [BsonId]
     [BsonRepresentation(BsonType.String)]
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
 
     /// <summary>
     /// Serial number assigned by the manufacturer.
@@ -29,7 +29,7 @@ public class Bike
     /// Model describing the technical characteristics and pricing of this bike.
     /// </summary>
     [BsonRepresentation(BsonType.String)]
-    public Guid ModelId { get; set; }
+    public string ModelId { get; set; }
 
     [BsonIgnore]
     public BikeModel? Model { get; set; }

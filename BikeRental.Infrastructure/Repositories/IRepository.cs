@@ -5,8 +5,8 @@ namespace BikeRental.Infrastructure.Repositories;
 public interface IRepository<T>
 {
     Task<List<T>> GetAllAsync();
-    Task<T?> GetByIdAsync(Guid id);
+    Task<T?> GetByIdAsync(string id);
     Task CreateAsync(T entity);
-    Task UpdateAsync(Guid id, T entity);
-    Task DeleteAsync(Guid id);
+    Task UpdateAsync(string id, T entity);
+    Task DeleteAsync(string id);
 }

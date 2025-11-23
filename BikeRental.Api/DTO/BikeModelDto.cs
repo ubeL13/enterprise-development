@@ -2,7 +2,7 @@ namespace BikeRental.Api.DTO;
 
 public class BikeModelDto
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
     public int WheelSize { get; set; }

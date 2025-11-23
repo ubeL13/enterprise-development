@@ -1,16 +1,18 @@
+using BikeRental.Domain.Models;
 using BikeRental.Infrastructure;
 using BikeRental.Infrastructure.Repositories;
+using BikeRental.Infrastructure.Services;
 using BikeRental.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Mongo settings
+// MongoDb settings
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDb"));
 
 builder.Services.AddSingleton<MongoDbContext>();
 
-// Generic repos
+// Generic repositories
 builder.Services.AddScoped<IRepository<Bike>, MongoRepository<Bike>>(sp =>
     new MongoRepository<Bike>(sp.GetRequiredService<MongoDbContext>(), "Bikes"));
 
@@ -23,10 +25,64 @@ builder.Services.AddScoped<IRepository<Renter>, MongoRepository<Renter>>(sp =>
 builder.Services.AddScoped<IRepository<Rental>, MongoRepository<Rental>>(sp =>
     new MongoRepository<Rental>(sp.GetRequiredService<MongoDbContext>(), "Rentals"));
 
+// Analytics service
+builder.Services.AddScoped<AnalyticsService>();
+
+// Controllers
 builder.Services.AddControllers();
+
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Swagger middleware (only in development)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "BikeRental API v1");
+        c.RoutePrefix = string.Empty;
+    });
+}
+
+app.UseHttpsRedirection();
 app.MapControllers();
+
+// Seed data if empty
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var modelRepo = services.GetRequiredService<IRepository<BikeModel>>();
+    var bikeRepo = services.GetRequiredService<IRepository<Bike>>();
+    var renterRepo = services.GetRequiredService<IRepository<Renter>>();
+    var rentalRepo = services.GetRequiredService<IRepository<Rental>>();
+
+    if (!(await modelRepo.GetAllAsync()).Any())
+    {
+        // Seed BikeModels
+        var models = DataSeeder.GetBikeModels();
+        foreach (var m in models)
+            await modelRepo.CreateAsync(m);
+
+        // Seed Bikes
+        var bikes = DataSeeder.GetBikes(models);
+        foreach (var b in bikes)
+            await bikeRepo.CreateAsync(b);
+
+        // Seed Renters
+        var renters = DataSeeder.GetRenters();
+        foreach (var r in renters)
+            await renterRepo.CreateAsync(r);
+
+        // Seed Rentals
+        var rentals = DataSeeder.GetRentals(bikes, renters);
+        foreach (var r in rentals)
+            await rentalRepo.CreateAsync(r);
+    }
+}
 
 app.Run();
