@@ -39,8 +39,8 @@ public class AnalyticsService
 
         var query =
             from rental in rentals
-            join bike in bikes on rental.Bike.Id equals bike.Id
-            join model in models on bike.Model.Id equals model.Id
+            join bike in bikes on rental.BikeId equals bike.Id
+            join model in models on bike.ModelId equals model.Id
             group rental by model into g
             select new
             {
@@ -60,8 +60,8 @@ public class AnalyticsService
 
         var query =
             from rental in rentals
-            join bike in bikes on rental.Bike.Id equals bike.Id
-            join model in models on bike.Model.Id equals model.Id
+            join bike in bikes on rental.BikeId equals bike.Id
+            join model in models on bike.ModelId equals model.Id
             group rental by model into g
             select new
             {
@@ -94,8 +94,8 @@ public class AnalyticsService
 
         var query =
             from rental in rentals
-            join bike in bikes on rental.Bike.Id equals bike.Id
-            join model in models on bike.Model.Id equals model.Id
+            join bike in bikes on rental.BikeId equals bike.Id
+            join model in models on bike.ModelId equals model.Id
             where model.Type == type
             select rental.DurationHours;
 
@@ -110,7 +110,7 @@ public class AnalyticsService
 
         var query =
             from rental in rentals
-            join renter in renters on rental.Renter.Id equals renter.Id
+            join renter in renters on rental.RenterId equals renter.Id
             group renter by renter into g
             select new
             {

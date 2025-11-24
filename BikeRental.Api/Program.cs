@@ -37,21 +37,21 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Swagger middleware (only in development)
+// Swagger middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "BikeRental API v1");
-        c.RoutePrefix = string.Empty;
+        c.RoutePrefix = string.Empty; // Swagger на /
     });
 }
 
 app.UseHttpsRedirection();
 app.MapControllers();
 
-// Seed data if empty
+// --- Seed data ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -63,25 +63,17 @@ using (var scope = app.Services.CreateScope())
 
     if (!(await modelRepo.GetAllAsync()).Any())
     {
-        // Seed BikeModels
         var models = DataSeeder.GetBikeModels();
-        foreach (var m in models)
-            await modelRepo.CreateAsync(m);
+        foreach (var m in models) await modelRepo.CreateAsync(m);
 
-        // Seed Bikes
         var bikes = DataSeeder.GetBikes(models);
-        foreach (var b in bikes)
-            await bikeRepo.CreateAsync(b);
+        foreach (var b in bikes) await bikeRepo.CreateAsync(b);
 
-        // Seed Renters
         var renters = DataSeeder.GetRenters();
-        foreach (var r in renters)
-            await renterRepo.CreateAsync(r);
+        foreach (var r in renters) await renterRepo.CreateAsync(r);
 
-        // Seed Rentals
         var rentals = DataSeeder.GetRentals(bikes, renters);
-        foreach (var r in rentals)
-            await rentalRepo.CreateAsync(r);
+        foreach (var r in rentals) await rentalRepo.CreateAsync(r);
     }
 }
 
