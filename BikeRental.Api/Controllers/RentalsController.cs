@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Controllers;
 
+/// <summary>
+/// Controller for managing rentals in the bike rental system.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class RentalsController : ControllerBase
@@ -13,6 +16,9 @@ public class RentalsController : ControllerBase
     private readonly IRepository<Bike> _bikes;
     private readonly IRepository<Renter> _renters;
 
+    /// <summary>
+    /// Initializes a new instance of the controller.
+    /// </summary>
     public RentalsController(
         IRepository<Rental> rentals,
         IRepository<Bike> bikes,
@@ -23,10 +29,16 @@ public class RentalsController : ControllerBase
         _renters = renters;
     }
 
+    /// <summary>
+    /// Retrieves all rentals.
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAll()
         => Ok(await _rentals.GetAllAsync());
 
+    /// <summary>
+    /// Creates a new rental.
+    /// </summary>
     [HttpPost]
     public async Task<IActionResult> Create(RentalDto dto)
     {

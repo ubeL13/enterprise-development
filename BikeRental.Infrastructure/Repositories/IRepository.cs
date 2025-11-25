@@ -2,11 +2,33 @@ using System.Linq.Expressions;
 
 namespace BikeRental.Infrastructure.Repositories;
 
+/// <summary>
+/// Generic repository interface for basic CRUD operations.
+/// </summary>
 public interface IRepository<T>
 {
+    /// <summary>
+    /// Retrieves all entities of type T.
+    /// </summary>
     Task<List<T>> GetAllAsync();
+
+    /// <summary>
+    /// Retrieves an entity by its unique identifier.
+    /// </summary>
     Task<T?> GetByIdAsync(string id);
+
+    /// <summary>
+    /// Creates a new entity.
+    /// </summary>
     Task CreateAsync(T entity);
+
+    /// <summary>
+    /// Updates an existing entity by its identifier.
+    /// </summary>
     Task UpdateAsync(string id, T entity);
+
+    /// <summary>
+    /// Deletes an entity by its identifier.
+    /// </summary>
     Task DeleteAsync(string id);
 }

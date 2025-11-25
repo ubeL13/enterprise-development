@@ -4,6 +4,9 @@ using BikeRental.Infrastructure.Repositories;
 
 namespace BikeRental.Infrastructure.Services;
 
+/// <summary>
+/// Service for retrieving analytics data from the bike rental system.
+/// </summary>
 public class AnalyticsService
 {
     private readonly IRepository<Rental> _rentals;
@@ -11,6 +14,9 @@ public class AnalyticsService
     private readonly IRepository<BikeModel> _models;
     private readonly IRepository<Renter> _renters;
 
+    /// <summary>
+    /// Initializes a new instance of the service.
+    /// </summary>
     public AnalyticsService(
         IRepository<Rental> rentals,
         IRepository<Bike> bikes,
@@ -23,14 +29,18 @@ public class AnalyticsService
         _renters = renters;
     }
 
-    // 1. Все спорт модели
+    /// <summary>
+    /// Retrieves all bike models of type "Sport".
+    /// </summary>
     public async Task<IEnumerable<BikeModel>> GetSportModelsAsync()
     {
         var models = await _models.GetAllAsync();
         return models.Where(m => m.Type == BikeType.Sport);
     }
 
-    // 2. Топ-5 моделей по прибыли
+    /// <summary>
+    /// Retrieves the top 5 bike models by total profit.
+    /// </summary>
     public async Task<IEnumerable<object>> GetTop5ModelsByProfitAsync()
     {
         var rentals = await _rentals.GetAllAsync();
@@ -51,7 +61,9 @@ public class AnalyticsService
         return query.OrderByDescending(x => x.Profit).Take(5);
     }
 
-    // 3. Топ-5 моделей по общей продолжительности аренды
+    /// <summary>
+    /// Retrieves the top 5 bike models by total rental duration.
+    /// </summary>
     public async Task<IEnumerable<object>> GetTop5ModelsByDurationAsync()
     {
         var rentals = await _rentals.GetAllAsync();
@@ -72,7 +84,9 @@ public class AnalyticsService
         return query.OrderByDescending(x => x.TotalHours).Take(5);
     }
 
-    // 4. Статистика длительности
+    /// <summary>
+    /// Retrieves statistics about rental durations (min, max, average).
+    /// </summary>
     public async Task<(double min, double max, double avg)> GetRentalDurationStatsAsync()
     {
         var rentals = await _rentals.GetAllAsync();
@@ -85,7 +99,9 @@ public class AnalyticsService
         );
     }
 
-    // 5. Общая длительность по типу велосипеда
+    /// <summary>
+    /// Retrieves total rental duration for a specific bike type.
+    /// </summary>
     public async Task<double> GetTotalDurationByBikeTypeAsync(BikeType type)
     {
         var rentals = await _rentals.GetAllAsync();
@@ -102,7 +118,9 @@ public class AnalyticsService
         return query.Sum();
     }
 
-    // 6. Топ-3 клиентов по количеству аренд
+    /// <summary>
+    /// Retrieves the top 3 renters by number of rentals.
+    /// </summary>
     public async Task<IEnumerable<object>> GetTop3RentersAsync()
     {
         var rentals = await _rentals.GetAllAsync();

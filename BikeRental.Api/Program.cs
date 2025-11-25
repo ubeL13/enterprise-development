@@ -6,7 +6,6 @@ using BikeRental.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// MongoDb settings
 builder.Services.Configure<MongoDbSettings>(options =>
 {
     var conn = builder.Configuration.GetConnectionString("mongo");
@@ -17,7 +16,6 @@ builder.Services.Configure<MongoDbSettings>(options =>
 
 builder.Services.AddSingleton<MongoDbContext>();
 
-// Generic repositories
 builder.Services.AddScoped<IRepository<Bike>, MongoRepository<Bike>>(sp =>
     new MongoRepository<Bike>(sp.GetRequiredService<MongoDbContext>(), "Bikes"));
 
@@ -30,19 +28,16 @@ builder.Services.AddScoped<IRepository<Renter>, MongoRepository<Renter>>(sp =>
 builder.Services.AddScoped<IRepository<Rental>, MongoRepository<Rental>>(sp =>
     new MongoRepository<Rental>(sp.GetRequiredService<MongoDbContext>(), "Rentals"));
 
-// Analytics service
 builder.Services.AddScoped<AnalyticsService>();
 
-// Controllers
 builder.Services.AddControllers();
 
-// Swagger
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Swagger middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -56,7 +51,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.MapControllers();
 
-// --- Seed data ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

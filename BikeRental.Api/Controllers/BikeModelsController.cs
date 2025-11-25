@@ -6,21 +6,33 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Controllers;
 
+/// <summary>
+/// Controller for managing bike models in the rental system.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class BikeModelsController : ControllerBase
 {
     private readonly IRepository<BikeModel> _models;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BikeModelsController"/> class.
+    /// </summary>
     public BikeModelsController(IRepository<BikeModel> models)
     {
         _models = models;
     }
 
+    /// <summary>
+    /// Retrieves all bike models.
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAll()
         => Ok(await _models.GetAllAsync());
 
+    /// <summary>
+    /// Creates a new bike model.
+    /// </summary>
     [HttpPost]
     public async Task<IActionResult> Create(BikeModelDto dto)
     {
