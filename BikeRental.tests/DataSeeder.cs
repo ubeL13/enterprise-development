@@ -5,6 +5,8 @@ namespace BikeRental.Tests;
 
 public static class DataSeeder
 {
+    private static string NewId() => Guid.NewGuid().ToString();
+
     public static List<BikeModel> GetBikeModels() =>
     [
         new() { Id = NewId(), Name = "Speedster", Type = BikeType.Road, WheelSize = 28, MaxRiderWeight = 100, BikeWeight = 9.5, BrakeType = "Disc", ModelYear = 2023, HourlyRate = 15 },
