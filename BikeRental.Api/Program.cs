@@ -7,8 +7,13 @@ using BikeRental.Infrastructure.Settings;
 var builder = WebApplication.CreateBuilder(args);
 
 // MongoDb settings
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDb"));
+builder.Services.Configure<MongoDbSettings>(options =>
+{
+    var conn = builder.Configuration.GetConnectionString("mongo");
+
+    options.ConnectionString = conn;
+    options.DatabaseName = "BikeRentalDb";
+});
 
 builder.Services.AddSingleton<MongoDbContext>();
 

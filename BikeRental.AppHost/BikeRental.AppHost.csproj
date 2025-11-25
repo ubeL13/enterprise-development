@@ -1,0 +1,17 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.0.0">
+	<ItemGroup>
+        <ProjectReference Include="..\BikeRental.Api\BikeRental.Api.csproj" />
+    </ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Aspire.Hosting.MongoDB" Version="13.0.0" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>e65543ea-61e5-4412-b7fc-ce3d4edbdd5a</UserSecretsId>
+	</PropertyGroup>
+
+</Project>

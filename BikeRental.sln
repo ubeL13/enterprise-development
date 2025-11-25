@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.Api", "BikeRental.Api\BikeRental.Api.csproj", "{B56D8775-D260-41F4-993E-37C20E95E062}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.AppHost", "BikeRental.AppHost\BikeRental.AppHost.csproj", "{671D5355-D818-428A-8991-88AF52038483}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.ServiceDefaults", "BikeRental.ServiceDefaults\BikeRental.ServiceDefaults.csproj", "{31411E8B-E604-426F-BE73-1504E8AB6265}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,30 @@ Global
 		{B56D8775-D260-41F4-993E-37C20E95E062}.Release|x64.Build.0 = Release|Any CPU
 		{B56D8775-D260-41F4-993E-37C20E95E062}.Release|x86.ActiveCfg = Release|Any CPU
 		{B56D8775-D260-41F4-993E-37C20E95E062}.Release|x86.Build.0 = Release|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Debug|x64.Build.0 = Debug|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Debug|x86.Build.0 = Debug|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Release|x64.ActiveCfg = Release|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Release|x64.Build.0 = Release|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Release|x86.ActiveCfg = Release|Any CPU
+		{671D5355-D818-428A-8991-88AF52038483}.Release|x86.Build.0 = Release|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Debug|x64.Build.0 = Debug|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Debug|x86.Build.0 = Debug|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Release|x64.ActiveCfg = Release|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Release|x64.Build.0 = Release|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Release|x86.ActiveCfg = Release|Any CPU
+		{31411E8B-E604-426F-BE73-1504E8AB6265}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
