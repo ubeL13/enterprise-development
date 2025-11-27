@@ -33,7 +33,7 @@ public class RentersController : ControllerBase
     /// Creates a new renter.
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create(RenterDto dto)
+    public async Task<IActionResult> Create(RenterCreateDto dto)
     {
         var renter = new Renter
         {

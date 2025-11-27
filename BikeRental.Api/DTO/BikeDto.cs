@@ -24,4 +24,6 @@ public class BikeDto
     /// Identifier of the bike model.
     /// </summary>
     public string ModelId { get; set; }
+    public BikeModelDto? Model { get; set; }
+
 }

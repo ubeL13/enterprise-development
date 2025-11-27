@@ -2,6 +2,8 @@ using BikeRental.Api.DTO;
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using BikeRental.Api.Extensions;
+
 
 namespace BikeRental.Api.Controllers;
 
@@ -17,7 +19,7 @@ public class RentalsController : ControllerBase
     private readonly IRepository<Renter> _renters;
 
     /// <summary>
-    /// Initializes a new instance of the controller.
+    /// Initializes a new instance of the RentalsController.
     /// </summary>
     public RentalsController(
         IRepository<Rental> rentals,
@@ -34,13 +36,26 @@ public class RentalsController : ControllerBase
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAll()
-        => Ok(await _rentals.GetAllAsync());
+    {
+        var rentals = await _rentals.GetAllAsync();
+
+        var result = rentals.Select(r => new RentalDto
+        {
+            Id = r.Id,
+            BikeId = r.BikeId,       
+            RenterId = r.RenterId,   
+            StartTime = r.StartTime,
+            DurationHours = r.DurationHours
+        });
+
+        return Ok(result);
+    }
 
     /// <summary>
     /// Creates a new rental.
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create(RentalDto dto)
+    public async Task<IActionResult> Create(RentalCreateDto dto)
     {
         var bike = await _bikes.GetByIdAsync(dto.BikeId);
         if (bike == null)
@@ -52,13 +67,25 @@ public class RentalsController : ControllerBase
 
         var rental = new Rental
         {
-            Bike = bike,
-            Renter = renter,
+            BikeId = dto.BikeId,
+            RenterId = dto.RenterId,
             StartTime = dto.StartTime,
             DurationHours = dto.DurationHours
         };
 
         await _rentals.CreateAsync(rental);
-        return Ok(rental);
+
+        var result = new RentalDto
+        {
+            Id = rental.Id,
+            BikeId = rental.BikeId,
+            Bike = bike.ToDto(),           
+            RenterId = rental.RenterId,
+            Renter = renter.ToDto(),       
+            StartTime = rental.StartTime,
+            DurationHours = rental.DurationHours
+        };
+
+        return Ok(result);
     }
 }

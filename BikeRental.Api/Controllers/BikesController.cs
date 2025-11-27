@@ -2,12 +2,10 @@ using BikeRental.Api.DTO;
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using BikeRental.Api.Extensions;
 
 namespace BikeRental.Api.Controllers;
 
-/// <summary>
-/// Controller for managing bikes in the rental system.
-/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class BikesController : ControllerBase
@@ -15,9 +13,6 @@ public class BikesController : ControllerBase
     private readonly IRepository<Bike> _bikes;
     private readonly IRepository<BikeModel> _models;
 
-    /// <summary>
-    /// Initializes a new instance of the controller.
-    /// </summary>
     public BikesController(IRepository<Bike> bikes, IRepository<BikeModel> models)
     {
         _bikes = bikes;
@@ -25,46 +20,43 @@ public class BikesController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves all bikes.
+    /// Returns all bikes with their models loaded.
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAll()
-        => Ok(await _bikes.GetAllAsync());
-
-    /// <summary>
-    /// Retrieves a bike by its ID.
-    /// </summary>
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id)
     {
-        var bike = await _bikes.GetByIdAsync(id);
-        return bike is null ? NotFound() : Ok(bike);
+        var bikes = await _bikes.GetAllAsync();
+
+        foreach (var bike in bikes)
+            bike.Model = await _models.GetByIdAsync(bike.ModelId);
+
+        return Ok(bikes);
     }
 
-    /// <summary>
-    /// Creates a new bike.
-    /// </summary>
+    
     [HttpPost]
-    public async Task<IActionResult> Create(BikeDto dto)
+    public async Task<IActionResult> Create(BikeCreateDto dto)
     {
+        
         var model = await _models.GetByIdAsync(dto.ModelId);
         if (model == null)
             return BadRequest($"BikeModel with id {dto.ModelId} not found");
 
-        var bike = new Bike
+        var newBike = new Bike
         {
-            Color = dto.Color,
             SerialNumber = dto.SerialNumber,
+            Color = dto.Color,
             ModelId = dto.ModelId
         };
 
-        await _bikes.CreateAsync(bike);
-        return Ok(bike);
+        await _bikes.CreateAsync(newBike);
+
+        var result = newBike.ToDto(); 
+        result.Model = model.ToDto();
+
+        return Ok(result);
     }
 
-    /// <summary>
-    /// Deletes a bike by its ID.
-    /// </summary>
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {

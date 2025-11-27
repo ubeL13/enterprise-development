@@ -1,4 +1,6 @@
 namespace BikeRental.Api.DTO;
+using BikeRental.Domain.Enums;
+
 
 /// <summary>
 /// Data transfer object representing a bike model.
@@ -18,7 +20,7 @@ public class BikeModelDto
     /// <summary>
     /// Type of the bike (e.g., Road, Mountain, Sport).
     /// </summary>
-    public string Type { get; set; } = string.Empty;
+    public BikeType Type { get; set; }
 
     /// <summary>
     /// Size of the bike wheels in inches.

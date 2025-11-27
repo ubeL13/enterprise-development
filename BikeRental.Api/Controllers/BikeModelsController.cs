@@ -34,15 +34,12 @@ public class BikeModelsController : ControllerBase
     /// Creates a new bike model.
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create(BikeModelDto dto)
+    public async Task<IActionResult> Create(BikeModelCreateDto dto)
     {
-        if (!Enum.TryParse<BikeType>(dto.Type, true, out var bikeType))
-            return BadRequest($"Unknown bike type: {dto.Type}");
-
         var model = new BikeModel
         {
             Name = dto.Name,
-            Type = bikeType,
+            Type = dto.Type,
             WheelSize = dto.WheelSize,
             BikeWeight = dto.BikeWeight,
             MaxRiderWeight = dto.MaxRiderWeight,

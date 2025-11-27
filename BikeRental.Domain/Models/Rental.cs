@@ -18,7 +18,7 @@ public class Rental
     /// <summary>
     /// The bike that was rented.
     /// </summary>
-    [BsonRepresentation(BsonType.String)]
+    [BsonElement("BikeId")]
     public string BikeId { get; set; }
 
     [BsonIgnore]
@@ -27,7 +27,7 @@ public class Rental
     /// <summary>
     /// The renter who took the bike.
     /// </summary>
-    [BsonRepresentation(BsonType.String)]
+    [BsonElement("RenterId")]
     public string RenterId { get; set; }
 
     [BsonIgnore]
