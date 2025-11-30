@@ -14,7 +14,7 @@ public class AnalyticsController : ControllerBase
     private readonly AnalyticsService _service;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AnalyticsController"/> class.
+    /// Initializes a new instance of the "AnalyticsController" class.
     /// </summary>
     public AnalyticsController(AnalyticsService service)
     {

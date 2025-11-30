@@ -17,6 +17,7 @@ public class RentalsController : ControllerBase
     private readonly IRepository<Rental> _rentals;
     private readonly IRepository<Bike> _bikes;
     private readonly IRepository<Renter> _renters;
+    private readonly IRepository<BikeModel> _models;
 
     /// <summary>
     /// Initializes a new instance of the RentalsController.
@@ -24,11 +25,13 @@ public class RentalsController : ControllerBase
     public RentalsController(
         IRepository<Rental> rentals,
         IRepository<Bike> bikes,
-        IRepository<Renter> renters)
+        IRepository<Renter> renters,
+        IRepository<BikeModel> models)
     {
         _rentals = rentals;
         _bikes = bikes;
         _renters = renters;
+        _models = models;
     }
 
     /// <summary>
@@ -39,14 +42,25 @@ public class RentalsController : ControllerBase
     {
         var rentals = await _rentals.GetAllAsync();
 
-        var result = rentals.Select(r => new RentalDto
+        var result = new List<RentalDto>();
+
+        foreach (var r in rentals)
         {
-            Id = r.Id,
-            BikeId = r.BikeId,       
-            RenterId = r.RenterId,   
-            StartTime = r.StartTime,
-            DurationHours = r.DurationHours
-        });
+            var bike = await _bikes.GetByIdAsync(r.BikeId);
+            var renter = await _renters.GetByIdAsync(r.RenterId);
+            bike.Model = await _models.GetByIdAsync(bike.ModelId);
+
+            result.Add(new RentalDto
+            {
+                Id = r.Id,
+                BikeId = r.BikeId,
+                Bike = bike?.ToDto(),
+                RenterId = r.RenterId,
+                Renter = renter?.ToDto(),
+                StartTime = r.StartTime,
+                DurationHours = r.DurationHours
+            });
+        }
 
         return Ok(result);
     }
@@ -64,6 +78,8 @@ public class RentalsController : ControllerBase
         var renter = await _renters.GetByIdAsync(dto.RenterId);
         if (renter == null)
             return NotFound($"Renter with id {dto.RenterId} not found");
+
+        bike.Model = await _models.GetByIdAsync(bike.ModelId);
 
         var rental = new Rental
         {

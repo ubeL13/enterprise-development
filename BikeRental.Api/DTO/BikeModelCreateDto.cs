@@ -12,7 +12,11 @@ public class BikeModelCreateDto
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Type of the bike.
+    /// </summary>
     public BikeType Type { get; set; }
+
     /// <summary>
     /// Size of the bike wheels in inches.
     /// </summary>

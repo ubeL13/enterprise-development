@@ -11,14 +11,23 @@ public class RentalDto
     public string Id { get; set; }
 
     /// <summary>
-    /// Identifier of the bike being rented.
+    /// Information about bike.
     /// </summary>
     public string BikeId { get; set; }
+
+    /// <summary>
+    /// Identifier of the bike being rented.
+    /// </summary>
     public BikeDto? Bike { get; set; }
+
     /// <summary>
     /// Identifier of the renter.
     /// </summary>
     public string RenterId { get; set; }
+
+    /// <summary>
+    /// Information about renter.
+    /// </summary>
     public RenterDto? Renter { get; set; }
 
     /// <summary>

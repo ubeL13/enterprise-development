@@ -33,7 +33,9 @@ public class BikesController : ControllerBase
         return Ok(bikes);
     }
 
-    
+    /// <summary>
+    /// Creates a new bike entity and returns the created bike with its model information populated.
+    /// </summary>
     [HttpPost]
     public async Task<IActionResult> Create(BikeCreateDto dto)
     {
