@@ -29,7 +29,7 @@ public class Bike
     /// Model describing the technical characteristics and pricing of this bike.
     /// </summary>
     [BsonRepresentation(BsonType.String)]
-    public string ModelId { get; set; }
+    public required string ModelId { get; set; }
 
     [BsonIgnore]
     public BikeModel? Model { get; set; }

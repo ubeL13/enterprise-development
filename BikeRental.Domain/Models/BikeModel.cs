@@ -45,7 +45,7 @@ public class BikeModel
     /// <summary>
     /// Type of brakes 
     /// </summary>
-    public string BrakeType { get; set; } = string.Empty;
+    public string? BrakeType { get; set; }
 
     /// <summary>
     /// Model release year

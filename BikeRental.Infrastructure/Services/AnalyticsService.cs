@@ -7,27 +7,19 @@ namespace BikeRental.Infrastructure.Services;
 /// <summary>
 /// Service for retrieving analytics data from the bike rental system.
 /// </summary>
-public class AnalyticsService
+/// <remarks>
+/// Initializes a new instance of the service.
+/// </remarks>
+public class AnalyticsService(
+    IRepository<Rental> rentals,
+    IRepository<Bike> bikes,
+    IRepository<BikeModel> models,
+    IRepository<Renter> renters)
 {
-    private readonly IRepository<Rental> _rentals;
-    private readonly IRepository<Bike> _bikes;
-    private readonly IRepository<BikeModel> _models;
-    private readonly IRepository<Renter> _renters;
-
-    /// <summary>
-    /// Initializes a new instance of the service.
-    /// </summary>
-    public AnalyticsService(
-        IRepository<Rental> rentals,
-        IRepository<Bike> bikes,
-        IRepository<BikeModel> models,
-        IRepository<Renter> renters)
-    {
-        _rentals = rentals;
-        _bikes = bikes;
-        _models = models;
-        _renters = renters;
-    }
+    private readonly IRepository<Rental> _rentals = rentals;
+    private readonly IRepository<Bike> _bikes = bikes;
+    private readonly IRepository<BikeModel> _models = models;
+    private readonly IRepository<Renter> _renters = renters;
 
     /// <summary>
     /// Retrieves all bike models of type "Sport".
@@ -90,7 +82,7 @@ public class AnalyticsService
     public async Task<(double min, double max, double avg)> GetRentalDurationStatsAsync()
     {
         var rentals = await _rentals.GetAllAsync();
-        if (!rentals.Any()) return (0, 0, 0);
+        if (rentals.Count == 0) return (0, 0, 0);
 
         return (
             rentals.Min(r => r.DurationHours),

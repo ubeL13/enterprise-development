@@ -9,19 +9,14 @@ namespace BikeRental.Api.Controllers;
 /// <summary>
 /// Controller for managing bike models in the rental system.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="BikeModelsController"/> class.
+/// </remarks>
 [ApiController]
 [Route("api/[controller]")]
-public class BikeModelsController : ControllerBase
+public class BikeModelsController(IRepository<BikeModel> models) : ControllerBase
 {
-    private readonly IRepository<BikeModel> _models;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BikeModelsController"/> class.
-    /// </summary>
-    public BikeModelsController(IRepository<BikeModel> models)
-    {
-        _models = models;
-    }
+    private readonly IRepository<BikeModel> _models = models;
 
     /// <summary>
     /// Retrieves all bike models.

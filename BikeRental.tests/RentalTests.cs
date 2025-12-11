@@ -1,5 +1,4 @@
 ﻿using BikeRental.Domain.Enums;
-using BikeRental.tests;
 
 namespace BikeRental.Tests;
 
@@ -39,11 +38,11 @@ public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
         ];
 
         var actual = fixture.Rentals
-            .GroupBy(r => r.Bike.Model)
+            .GroupBy(r => r.Bike!.Model!)
             .Select(g => new
             {
                 g.Key.Name,
-                Profit = g.Sum(r => r.Bike.Model.HourlyRate * r.DurationHours)
+                Profit = g.Sum(r => r.Bike!.Model!.HourlyRate * r.DurationHours)
             })
             .OrderByDescending(x => x.Profit)
             .Take(5)
@@ -69,7 +68,7 @@ public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
         ];
 
         var actual = fixture.Rentals
-            .GroupBy(r => r.Bike.Model)
+            .GroupBy(keySelector: r => r.Bike!.Model!)
             .Select(g => new
             {
                 g.Key.Name,
@@ -112,7 +111,7 @@ public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
     public void ShouldSumRentalTimeByBikeType(BikeType bikeType, int expected)
     {
         var actual = fixture.Rentals
-            .Where(r => r.Bike.Model.Type == bikeType)
+            .Where(r => r.Bike!.Model!.Type == bikeType)
             .Sum(r => r.DurationHours);
 
         Assert.Equal(expected, actual);
@@ -134,7 +133,7 @@ public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
             .GroupBy(r => r.Renter)
             .OrderByDescending(g => g.Count())
             .Take(3)
-            .Select(g => g.Key.FullName)
+            .Select(g => g.Key!.FullName)
             .ToList();
 
         Assert.Equal(expected, actual);

@@ -10,29 +10,21 @@ namespace BikeRental.Api.Controllers;
 /// <summary>
 /// Controller for managing rentals in the bike rental system.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the RentalsController.
+/// </remarks>
 [ApiController]
 [Route("api/[controller]")]
-public class RentalsController : ControllerBase
+public class RentalsController(
+    IRepository<Rental> rentals,
+    IRepository<Bike> bikes,
+    IRepository<Renter> renters,
+    IRepository<BikeModel> models) : ControllerBase
 {
-    private readonly IRepository<Rental> _rentals;
-    private readonly IRepository<Bike> _bikes;
-    private readonly IRepository<Renter> _renters;
-    private readonly IRepository<BikeModel> _models;
-
-    /// <summary>
-    /// Initializes a new instance of the RentalsController.
-    /// </summary>
-    public RentalsController(
-        IRepository<Rental> rentals,
-        IRepository<Bike> bikes,
-        IRepository<Renter> renters,
-        IRepository<BikeModel> models)
-    {
-        _rentals = rentals;
-        _bikes = bikes;
-        _renters = renters;
-        _models = models;
-    }
+    private readonly IRepository<Rental> _rentals = rentals;
+    private readonly IRepository<Bike> _bikes = bikes;
+    private readonly IRepository<Renter> _renters = renters;
+    private readonly IRepository<BikeModel> _models = models;
 
     /// <summary>
     /// Retrieves all rentals.
@@ -47,6 +39,8 @@ public class RentalsController : ControllerBase
         foreach (var r in rentals)
         {
             var bike = await _bikes.GetByIdAsync(r.BikeId);
+            if (bike == null)
+                continue;
             var renter = await _renters.GetByIdAsync(r.RenterId);
             bike.Model = await _models.GetByIdAsync(bike.ModelId);
 

@@ -8,12 +8,12 @@ public class RentalDto
     /// <summary>
     /// Unique identifier of the rental.
     /// </summary>
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
     /// <summary>
     /// Information about bike.
     /// </summary>
-    public string BikeId { get; set; }
+    public required string BikeId { get; set; }
 
     /// <summary>
     /// Identifier of the bike being rented.
@@ -23,7 +23,7 @@ public class RentalDto
     /// <summary>
     /// Identifier of the renter.
     /// </summary>
-    public string RenterId { get; set; }
+    public required string RenterId { get; set; }
 
     /// <summary>
     /// Information about renter.

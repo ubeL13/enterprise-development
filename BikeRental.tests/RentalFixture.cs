@@ -1,7 +1,6 @@
 ﻿using BikeRental.Domain.Models;
-using BikeRental.Tests;
 
-namespace BikeRental.tests;
+namespace BikeRental.Tests;
 public class RentalFixture
 {
     public List<BikeModel> Models { get; }

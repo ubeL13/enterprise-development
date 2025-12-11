@@ -25,7 +25,7 @@ public static class DataSeeder
     {
         var bikes = new List<Bike>();
         var rnd = new Random();
-        string[] colors = { "Red", "Blue", "Black", "White", "Green", "Yellow", "Gray", "Purple" };
+        string[] colors = ["Red", "Blue", "Black", "White", "Green", "Yellow", "Gray", "Purple"];
 
         for (var i = 0; i < 20; i++)
         {

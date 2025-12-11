@@ -10,25 +10,25 @@ public interface IRepository<T>
     /// <summary>
     /// Retrieves all entities of type T.
     /// </summary>
-    Task<List<T>> GetAllAsync();
+    public Task<List<T>> GetAllAsync();
 
     /// <summary>
     /// Retrieves an entity by its unique identifier.
     /// </summary>
-    Task<T?> GetByIdAsync(string id);
+    public Task<T?> GetByIdAsync(string id);
 
     /// <summary>
     /// Creates a new entity.
     /// </summary>
-    Task CreateAsync(T entity);
+    public Task CreateAsync(T entity);
 
     /// <summary>
     /// Updates an existing entity by its identifier.
     /// </summary>
-    Task UpdateAsync(string id, T entity);
+    public Task UpdateAsync(string id, T entity);
 
     /// <summary>
     /// Deletes an entity by its identifier.
     /// </summary>
-    Task DeleteAsync(string id);
+    public Task DeleteAsync(string id);
 }

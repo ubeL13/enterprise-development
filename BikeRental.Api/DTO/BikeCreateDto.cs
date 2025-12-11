@@ -18,5 +18,5 @@ public class BikeCreateDto
     /// <summary>
     /// Identifier of the bike model.
     /// </summary>
-    public string ModelId { get; set; }
+    public required string ModelId { get; set; }
 }

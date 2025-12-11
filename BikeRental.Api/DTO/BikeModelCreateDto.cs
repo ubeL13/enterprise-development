@@ -35,7 +35,7 @@ public class BikeModelCreateDto
     /// <summary>
     /// Type of brakes used on the bike.
     /// </summary>
-    public string BrakeType { get; set; } = string.Empty;
+    public string? BrakeType { get; set; }
 
     /// <summary>
     /// Year of the bike model.

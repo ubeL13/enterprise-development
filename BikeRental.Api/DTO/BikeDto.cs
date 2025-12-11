@@ -8,22 +8,23 @@ public class BikeDto
     /// <summary>
     /// Unique identifier of the bike.
     /// </summary>
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
     /// <summary>
     /// Serial number of the bike.
     /// </summary>
-    public string SerialNumber { get; set; } = string.Empty;
+    public required string SerialNumber { get; set; }
+
 
     /// <summary>
     /// Color of the bike.
     /// </summary>
-    public string Color { get; set; } = string.Empty;
+    public required string Color { get; set; }
 
     /// <summary>
     /// Identifier of the bike model.
     /// </summary>
-    public string ModelId { get; set; }
+    public required string ModelId { get; set; }
     public BikeModelDto? Model { get; set; }
 
 }

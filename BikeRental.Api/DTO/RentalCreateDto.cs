@@ -8,12 +8,12 @@ public class RentalCreateDto
     /// <summary>
     /// Identifier of the bike being rented.
     /// </summary>
-    public string BikeId { get; set; }
+    public required string BikeId { get; set; }
 
     /// <summary>
     /// Identifier of the renter.
     /// </summary>
-    public string RenterId { get; set; }
+    public required string RenterId { get; set; }
 
     /// <summary>
     /// Start time of the rental.

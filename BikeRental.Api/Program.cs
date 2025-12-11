@@ -8,8 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<MongoDbSettings>(options =>
 {
-    var conn = builder.Configuration.GetConnectionString("mongo");
-
+    var conn = builder.Configuration.GetConnectionString("mongo") ?? throw new InvalidOperationException("Connection string 'mongo' is missing");
     options.ConnectionString = conn;
     options.DatabaseName = "BikeRentalDb";
 });
@@ -60,7 +59,7 @@ using (var scope = app.Services.CreateScope())
     var renterRepo = services.GetRequiredService<IRepository<Renter>>();
     var rentalRepo = services.GetRequiredService<IRepository<Rental>>();
 
-    if (!(await modelRepo.GetAllAsync()).Any())
+    if ((await modelRepo.GetAllAsync()).Count == 0)
     {
         var models = DataSeeder.GetBikeModels();
         foreach (var m in models) await modelRepo.CreateAsync(m);

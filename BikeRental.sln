@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.Domain", "BikeRental.Domain\BikeRental.Domain.csproj", "{EA80A8FA-2166-4934-ACCD-9727AC81E9E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.tests", "BikeRental.tests\BikeRental.tests.csproj", "{8F46C700-46B8-466B-B4B3-5D6C5E777CA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.Tests", "BikeRental.tests\BikeRental.Tests.csproj", "{8F46C700-46B8-466B-B4B3-5D6C5E777CA3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeRental.Infrastructure", "BikeRental.Infrastructure\BikeRental.Infrastructure.csproj", "{CBD36BF3-8BBD-4F18-91CA-1B2B4E273B05}"
 EndProject

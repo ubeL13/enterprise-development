@@ -19,7 +19,7 @@ public class Rental
     /// The bike that was rented.
     /// </summary>
     [BsonElement("BikeId")]
-    public string BikeId { get; set; }
+    public required string BikeId { get; set; }
 
     [BsonIgnore]
     public Bike? Bike { get; set; }
@@ -28,7 +28,7 @@ public class Rental
     /// The renter who took the bike.
     /// </summary>
     [BsonElement("RenterId")]
-    public string RenterId { get; set; }
+    public required string RenterId { get; set; }
 
     [BsonIgnore]
     public Renter? Renter { get; set; }

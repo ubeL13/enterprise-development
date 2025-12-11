@@ -7,19 +7,14 @@ namespace BikeRental.Api.Controllers;
 /// <summary>
 /// Provides analytics data for the bike rental system.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the "AnalyticsController" class.
+/// </remarks>
 [ApiController]
 [Route("api/analytics")]
-public class AnalyticsController : ControllerBase
+public class AnalyticsController(AnalyticsService service) : ControllerBase
 {
-    private readonly AnalyticsService _service;
-
-    /// <summary>
-    /// Initializes a new instance of the "AnalyticsController" class.
-    /// </summary>
-    public AnalyticsController(AnalyticsService service)
-    {
-        _service = service;
-    }
+    private readonly AnalyticsService _service = service;
 
     /// <summary>
     /// Retrieves all bikes categorized as "sport" models.

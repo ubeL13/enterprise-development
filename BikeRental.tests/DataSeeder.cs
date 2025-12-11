@@ -37,29 +37,29 @@ public static class DataSeeder
 
     public static List<Bike> GetBikes(List<BikeModel> models) =>
     [
-        new() { Id = NewId(), SerialNumber = "B001", Color = "Red", Model = models[0] },
-        new() { Id = NewId(), SerialNumber = "B002", Color = "Blue", Model = models[1] },
-        new() { Id = NewId(), SerialNumber = "B003", Color = "Black", Model = models[2] },
-        new() { Id = NewId(), SerialNumber = "B004", Color = "White", Model = models[3] },
-        new() { Id = NewId(), SerialNumber = "B005", Color = "Gray", Model = models[4] },
-        new() { Id = NewId(), SerialNumber = "B006", Color = "Yellow", Model = models[5] },
-        new() { Id = NewId(), SerialNumber = "B007", Color = "Orange", Model = models[6] },
-        new() { Id = NewId(), SerialNumber = "B008", Color = "Green", Model = models[7] },
-        new() { Id = NewId(), SerialNumber = "B009", Color = "Purple", Model = models[8] },
-        new() { Id = NewId(), SerialNumber = "B010", Color = "Pink", Model = models[9] },
+        new() { Id = NewId(), SerialNumber = "B001", Color = "Red", Model = models[0], ModelId = models[0].Id },
+        new() { Id = NewId(), SerialNumber = "B002", Color = "Blue", Model = models[1], ModelId = models[1].Id },
+        new() { Id = NewId(), SerialNumber = "B003", Color = "Black", Model = models[2], ModelId = models[2].Id },
+        new() { Id = NewId(), SerialNumber = "B004", Color = "White", Model = models[3], ModelId = models[3].Id },
+        new() { Id = NewId(), SerialNumber = "B005", Color = "Gray", Model = models[4], ModelId = models[4].Id },
+        new() { Id = NewId(), SerialNumber = "B006", Color = "Yellow", Model = models[5], ModelId = models[5].Id },
+        new() { Id = NewId(), SerialNumber = "B007", Color = "Orange", Model = models[6], ModelId = models[6].Id },
+        new() { Id = NewId(), SerialNumber = "B008", Color = "Green", Model = models[7], ModelId = models[7].Id },
+        new() { Id = NewId(), SerialNumber = "B009", Color = "Purple", Model = models[8], ModelId = models[8].Id },
+        new() { Id = NewId(), SerialNumber = "B010", Color = "Pink", Model = models[9], ModelId = models[9].Id },
     ];
 
     public static List<Rental> GetRentals(List<Bike> bikes, List<Renter> renters) =>
     [
-        new() { Id = NewId(), Bike = bikes[0], Renter = renters[0], StartTime = DateTime.Now.AddHours(-10), DurationHours = 2 },
-        new() { Id = NewId(), Bike = bikes[1], Renter = renters[1], StartTime = DateTime.Now.AddHours(-9), DurationHours = 5 },
-        new() { Id = NewId(), Bike = bikes[2], Renter = renters[2], StartTime = DateTime.Now.AddHours(-8), DurationHours = 3 },
-        new() { Id = NewId(), Bike = bikes[3], Renter = renters[3], StartTime = DateTime.Now.AddHours(-7), DurationHours = 4 },
-        new() { Id = NewId(), Bike = bikes[4], Renter = renters[4], StartTime = DateTime.Now.AddHours(-6), DurationHours = 6 },
-        new() { Id = NewId(), Bike = bikes[5], Renter = renters[5], StartTime = DateTime.Now.AddHours(-5), DurationHours = 1 },
-        new() { Id = NewId(), Bike = bikes[6], Renter = renters[6], StartTime = DateTime.Now.AddHours(-4), DurationHours = 7 },
-        new() { Id = NewId(), Bike = bikes[7], Renter = renters[7], StartTime = DateTime.Now.AddHours(-3), DurationHours = 3 },
-        new() { Id = NewId(), Bike = bikes[8], Renter = renters[8], StartTime = DateTime.Now.AddHours(-2), DurationHours = 5 },
-        new() { Id = NewId(), Bike = bikes[9], Renter = renters[9], StartTime = DateTime.Now.AddHours(-1), DurationHours = 4 },
+        new() { Id = NewId(), Bike = bikes[0], BikeId = bikes[0].Id, Renter = renters[0], RenterId = renters[0].Id, StartTime = DateTime.Now.AddHours(-10), DurationHours = 2 },
+        new() { Id = NewId(), Bike = bikes[1], BikeId = bikes[1].Id, Renter = renters[1], RenterId = renters[1].Id, StartTime = DateTime.Now.AddHours(-9), DurationHours = 5 },
+        new() { Id = NewId(), Bike = bikes[2], BikeId = bikes[2].Id, Renter = renters[2], RenterId = renters[2].Id, StartTime = DateTime.Now.AddHours(-8), DurationHours = 3 },
+        new() { Id = NewId(), Bike = bikes[3], BikeId = bikes[3].Id, Renter = renters[3], RenterId = renters[3].Id, StartTime = DateTime.Now.AddHours(-7), DurationHours = 4 },
+        new() { Id = NewId(), Bike = bikes[4], BikeId = bikes[4].Id, Renter = renters[4], RenterId = renters[4].Id, StartTime = DateTime.Now.AddHours(-6), DurationHours = 6 },
+        new() { Id = NewId(), Bike = bikes[5], BikeId = bikes[5].Id, Renter = renters[5], RenterId = renters[5].Id, StartTime = DateTime.Now.AddHours(-5), DurationHours = 1 },
+        new() { Id = NewId(), Bike = bikes[6], BikeId = bikes[6].Id, Renter = renters[6], RenterId = renters[6].Id, StartTime = DateTime.Now.AddHours(-4), DurationHours = 7 },
+        new() { Id = NewId(), Bike = bikes[7], BikeId = bikes[7].Id, Renter = renters[7], RenterId = renters[7].Id, StartTime = DateTime.Now.AddHours(-3), DurationHours = 3 },
+        new() { Id = NewId(), Bike = bikes[8], BikeId = bikes[8].Id, Renter = renters[8], RenterId = renters[8].Id, StartTime = DateTime.Now.AddHours(-2), DurationHours = 5 },
+        new() { Id = NewId(), Bike = bikes[9], BikeId = bikes[9].Id, Renter = renters[9], RenterId = renters[9].Id, StartTime = DateTime.Now.AddHours(-1), DurationHours = 4 },
     ];
 }

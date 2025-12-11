@@ -10,12 +10,15 @@ public class BikeModelDto
     /// <summary>
     /// Unique identifier of the bike model.
     /// </summary>
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
     /// <summary>
     /// Name of the bike model.
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public required string Name
+    {
+        get; set;
+    }
 
     /// <summary>
     /// Type of the bike (e.g., Road, Mountain, Sport).
@@ -40,7 +43,7 @@ public class BikeModelDto
     /// <summary>
     /// Type of brakes used on the bike.
     /// </summary>
-    public string BrakeType { get; set; } = string.Empty;
+    public required string? BrakeType { get; set; }
 
     /// <summary>
     /// Year of the bike model.
