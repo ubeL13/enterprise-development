@@ -12,10 +12,8 @@ namespace BikeRental.Api.Controllers;
 /// </remarks>
 [ApiController]
 [Route("api/analytics")]
-public class AnalyticsController(AnalyticsService service) : ControllerBase
+public class AnalyticsController(AnalyticsService _service) : ControllerBase
 {
-    private readonly AnalyticsService _service = service;
-
     /// <summary>
     /// Retrieves all bikes categorized as "sport" models.
     /// </summary>

@@ -8,11 +8,8 @@ namespace BikeRental.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BikesController(IRepository<Bike> bikes, IRepository<BikeModel> models) : ControllerBase
+public class BikesController(IRepository<Bike> _bikes, IRepository<BikeModel> _models) : ControllerBase
 {
-    private readonly IRepository<Bike> _bikes = bikes;
-    private readonly IRepository<BikeModel> _models = models;
-
     /// <summary>
     /// Returns all bikes with their models loaded.
     /// </summary>

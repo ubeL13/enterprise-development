@@ -11,16 +11,11 @@ namespace BikeRental.Api.Services;
 /// Initializes a new instance of the service.
 /// </remarks>
 public class AnalyticsService(
-    IRepository<Rental> rentals,
-    IRepository<Bike> bikes,
-    IRepository<BikeModel> models,
-    IRepository<Renter> renters)
+    IRepository<Rental> _rentals,
+    IRepository<Bike> _bikes,
+    IRepository<BikeModel> _models,
+    IRepository<Renter> _renters)
 {
-    private readonly IRepository<Rental> _rentals = rentals;
-    private readonly IRepository<Bike> _bikes = bikes;
-    private readonly IRepository<BikeModel> _models = models;
-    private readonly IRepository<Renter> _renters = renters;
-
     /// <summary>
     /// Retrieves all bike models of type "Sport".
     /// </summary>

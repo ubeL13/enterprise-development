@@ -16,16 +16,11 @@ namespace BikeRental.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class RentalsController(
-    IRepository<Rental> rentals,
-    IRepository<Bike> bikes,
-    IRepository<Renter> renters,
-    IRepository<BikeModel> models) : ControllerBase
+    IRepository<Rental> _rentals,
+    IRepository<Bike> _bikes,
+    IRepository<Renter> _renters,
+    IRepository<BikeModel> _models) : ControllerBase
 {
-    private readonly IRepository<Rental> _rentals = rentals;
-    private readonly IRepository<Bike> _bikes = bikes;
-    private readonly IRepository<Renter> _renters = renters;
-    private readonly IRepository<BikeModel> _models = models;
-
     /// <summary>
     /// Retrieves all rentals.
     /// </summary>

@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace BikeRental.Infrastructure.Repositories;
 
 /// <summary>

@@ -1,4 +1,4 @@
-using BikeRental.Domain.Enums;
+п»їusing BikeRental.Domain.Enums;
 using BikeRental.Domain.Models;
 
 namespace BikeRental.Infrastructure;
@@ -23,16 +23,16 @@ public static class DataSeeder
 
     public static List<Renter> GetRenters() =>
     [
-        new() { Id = NewId(), FullName = "Иванов Иван", Phone = "+7 999 111 11 11" },
-        new() { Id = NewId(), FullName = "Петров Пётр", Phone = "+7 999 222 22 22" },
-        new() { Id = NewId(), FullName = "Сидоров Сидор", Phone = "+7 999 333 33 33" },
-        new() { Id = NewId(), FullName = "Кузнецова Анна", Phone = "+7 999 444 44 44" },
-        new() { Id = NewId(), FullName = "Попова Мария", Phone = "+7 999 555 55 55" },
-        new() { Id = NewId(), FullName = "Волков Николай", Phone = "+7 999 666 66 66" },
-        new() { Id = NewId(), FullName = "Фёдорова Дарья", Phone = "+7 999 777 77 77" },
-        new() { Id = NewId(), FullName = "Егоров Андрей", Phone = "+7 999 888 88 88" },
-        new() { Id = NewId(), FullName = "Смирнова Полина", Phone = "+7 999 999 99 99" },
-        new() { Id = NewId(), FullName = "Орлова Елена", Phone = "+7 900 123 45 67" },
+        new() { Id = NewId(), FullName = "РРІР°РЅРѕРІ РРІР°РЅ", Phone = "+7 999 111 11 11" },
+        new() { Id = NewId(), FullName = "РџРµС‚СЂРѕРІ РџС‘С‚СЂ", Phone = "+7 999 222 22 22" },
+        new() { Id = NewId(), FullName = "РЎРёРґРѕСЂРѕРІ РЎРёРґРѕСЂ", Phone = "+7 999 333 33 33" },
+        new() { Id = NewId(), FullName = "РљСѓР·РЅРµС†РѕРІР° РђРЅРЅР°", Phone = "+7 999 444 44 44" },
+        new() { Id = NewId(), FullName = "РџРѕРїРѕРІР° РњР°СЂРёСЏ", Phone = "+7 999 555 55 55" },
+        new() { Id = NewId(), FullName = "Р’РѕР»РєРѕРІ РќРёРєРѕР»Р°Р№", Phone = "+7 999 666 66 66" },
+        new() { Id = NewId(), FullName = "Р¤С‘РґРѕСЂРѕРІР° Р”Р°СЂСЊСЏ", Phone = "+7 999 777 77 77" },
+        new() { Id = NewId(), FullName = "Р•РіРѕСЂРѕРІ РђРЅРґСЂРµР№", Phone = "+7 999 888 88 88" },
+        new() { Id = NewId(), FullName = "РЎРјРёСЂРЅРѕРІР° РџРѕР»РёРЅР°", Phone = "+7 999 999 99 99" },
+        new() { Id = NewId(), FullName = "РћСЂР»РѕРІР° Р•Р»РµРЅР°", Phone = "+7 900 123 45 67" },
     ];
 
     public static List<Bike> GetBikes(List<BikeModel> models) =>

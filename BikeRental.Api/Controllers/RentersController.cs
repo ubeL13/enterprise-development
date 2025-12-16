@@ -13,10 +13,8 @@ namespace BikeRental.Api.Controllers;
 /// </remarks>
 [ApiController]
 [Route("api/[controller]")]
-public class RentersController(IRepository<Renter> renters) : ControllerBase
+public class RentersController(IRepository<Renter> _renters) : ControllerBase
 {
-    private readonly IRepository<Renter> _renters = renters;
-
     /// <summary>
     /// Retrieves all renters.
     /// </summary>
