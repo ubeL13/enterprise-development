@@ -18,11 +18,17 @@ builder.Services.Configure<MongoDbSettings>(options =>
     options.DatabaseName = "BikeRentalDb";
 });
 
+builder.Services.AddDbContext<MongoDbContext>(options =>
+{
+    var connectionString =
+        builder.Configuration.GetConnectionString("mongo")
+        ?? throw new InvalidOperationException("Connection string 'mongo' is missing");
+
+    options.UseMongoDB(connectionString, "BikeRentalDb");
+});
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
 builder.Services.AddScoped<AnalyticsService>();
-
-
-builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
