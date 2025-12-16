@@ -1,4 +1,5 @@
 ﻿using BikeRental.Domain.Models;
+using BikeRental.Infrastructure;
 
 namespace BikeRental.Tests;
 public class RentalFixture

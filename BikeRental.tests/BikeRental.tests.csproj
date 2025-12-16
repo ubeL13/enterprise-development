@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BikeRental.Domain\BikeRental.Domain.csproj" />
+	<ProjectReference Include="..\BikeRental.Infrastructure\BikeRental.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

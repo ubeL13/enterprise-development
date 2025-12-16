@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using BikeRental.Infrastructure.Services;
+using BikeRental.Api.Services;
 using BikeRental.Domain.Enums;
 
 namespace BikeRental.Api.Controllers;

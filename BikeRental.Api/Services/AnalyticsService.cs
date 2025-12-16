@@ -2,7 +2,7 @@ using BikeRental.Domain.Enums;
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure.Repositories;
 
-namespace BikeRental.Infrastructure.Services;
+namespace BikeRental.Api.Services;
 
 /// <summary>
 /// Service for retrieving analytics data from the bike rental system.

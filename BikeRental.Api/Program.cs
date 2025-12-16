@@ -1,7 +1,7 @@
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure;
 using BikeRental.Infrastructure.Repositories;
-using BikeRental.Infrastructure.Services;
+using BikeRental.Api.Services;
 using BikeRental.Infrastructure.Settings;
 
 using Microsoft.EntityFrameworkCore;
