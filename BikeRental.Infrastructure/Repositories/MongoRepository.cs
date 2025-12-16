@@ -5,19 +5,13 @@ namespace BikeRental.Infrastructure.Repositories;
 /// <summary>
 /// Generic MongoDB repository implementing basic CRUD operations.
 /// </summary>
-public class MongoRepository<T> : IRepository<T> where T : class
+/// <remarks>
+/// Initializes a new instance of the repository with a MongoDB collection.
+/// </remarks>
+public class MongoRepository<T>(MongoDbContext context) : IRepository<T> where T : class
 {
-    private readonly DbSet<T> _dbSet;
-    private readonly DbContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the repository with a MongoDB collection.
-    /// </summary>
-    public MongoRepository(MongoDbContext context)
-    {
-        _context = context;
-        _dbSet = context.Set<T>();
-    }
+    private readonly DbSet<T> _dbSet = context.Set<T>();
+    private readonly DbContext _context = context;
 
     /// <summary>
     /// Retrieves all documents from the collection.

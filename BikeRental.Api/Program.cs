@@ -3,11 +3,7 @@ using BikeRental.Infrastructure;
 using BikeRental.Infrastructure.Repositories;
 using BikeRental.Api.Services;
 using BikeRental.Infrastructure.Settings;
-
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using MongoDB.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
