@@ -1,6 +1,4 @@
 using BikeRental.Domain.Enums;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace BikeRental.Domain.Models;
 
@@ -12,9 +10,7 @@ public class BikeModel
     /// <summary>
     /// Unique identifier of the bike model.
     /// </summary>
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
 
     /// <summary>

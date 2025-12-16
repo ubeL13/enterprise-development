@@ -1,8 +1,5 @@
 namespace BikeRental.Domain.Models;
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
 /// <summary>
 /// Represents a person who rents bikes.
 /// </summary>
@@ -11,9 +8,7 @@ public class Renter
     /// <summary>
     /// Unique identifier of the renter.
     /// </summary>
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// Full name of the renter.

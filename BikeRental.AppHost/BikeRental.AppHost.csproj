@@ -1,9 +1,13 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.0.0">
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.5.1" />
+
 	<ItemGroup>
         <ProjectReference Include="..\BikeRental.Api\BikeRental.Api.csproj" />
     </ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="Aspire.Hosting.MongoDB" Version="13.0.0" />
+		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.1" />
+		<PackageReference Include="Aspire.Hosting.MongoDB" Version="9.5.1" />
 	</ItemGroup>
 
 	<PropertyGroup>

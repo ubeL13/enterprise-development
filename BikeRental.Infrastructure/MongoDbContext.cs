@@ -1,19 +1,15 @@
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
-using BikeRental.Infrastructure.Settings;
+using Microsoft.EntityFrameworkCore;
+using BikeRental.Domain.Models;
 
 namespace BikeRental.Infrastructure;
 
-public class MongoDbContext
+public class MongoDbContext : DbContext
 {
-	private readonly IMongoDatabase _db;
+    public MongoDbContext(DbContextOptions<MongoDbContext> options)
+        : base(options) { }
 
-	public MongoDbContext(IOptions<MongoDbSettings> options)
-	{
-		var client = new MongoClient(options.Value.ConnectionString);
-		_db = client.GetDatabase(options.Value.DatabaseName);
-	}
-
-	public IMongoCollection<T> GetCollection<T>(string name)
-		=> _db.GetCollection<T>(name);
+    public DbSet<Bike> Bikes => Set<Bike>();
+    public DbSet<BikeModel> BikeModels => Set<BikeModel>();
+    public DbSet<Renter> Renters => Set<Renter>();
+    public DbSet<Rental> Rentals => Set<Rental>();
 }
