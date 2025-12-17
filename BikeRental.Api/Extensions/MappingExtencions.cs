@@ -1,4 +1,4 @@
-using BikeRental.Api.DTO;
+using BikeRental.Contracts.Dtos;
 using BikeRental.Domain.Models;
 
 namespace BikeRental.Api.Extensions;

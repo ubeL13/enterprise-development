@@ -1,6 +1,7 @@
-using BikeRental.Api.DTO;
+using BikeRental.Contracts.Dtos;
 using BikeRental.Domain.Models;
 using BikeRental.Infrastructure.Repositories;
+using BikeRental.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Controllers;

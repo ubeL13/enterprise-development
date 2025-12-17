@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using BikeRental.Domain;
 
 namespace BikeRental.Infrastructure.Repositories;
 

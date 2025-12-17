@@ -1,61 +1,122 @@
 using Microsoft.AspNetCore.Mvc;
-using BikeRental.Api.Services;
+using BikeRental.Contracts.Interfaces;
+using BikeRental.Contracts.Dtos;
 using BikeRental.Domain.Enums;
 
 namespace BikeRental.Api.Controllers;
 
-/// <summary>
-/// Provides analytics data for the bike rental system.
-/// </summary>
-/// <remarks>
-/// Initializes a new instance of the "AnalyticsController" class.
-/// </remarks>
 [ApiController]
 [Route("api/analytics")]
-public class AnalyticsController(AnalyticsService _service) : ControllerBase
+public class AnalyticsController : ControllerBase
 {
-    /// <summary>
-    /// Retrieves all bikes categorized as "sport" models.
-    /// </summary>
-    [HttpGet("sport-models")]
-    public async Task<IActionResult> GetSportModels()
-        => Ok(await _service.GetSportModelsAsync());
+    private readonly IAnalyticsService _service;
+    private readonly ILogger<AnalyticsController> _logger;
 
-    /// <summary>
-    /// Retrieves the top 5 bike models by total profit.
-    /// </summary>
-    [HttpGet("top-profit")]
-    public async Task<IActionResult> GetTop5Profit()
-        => Ok(await _service.GetTop5ModelsByProfitAsync());
-
-    /// <summary>
-    /// Retrieves the top 5 bike models by total rental duration.
-    /// </summary>
-    [HttpGet("top-duration")]
-    public async Task<IActionResult> GetTop5Duration()
-        => Ok(await _service.GetTop5ModelsByDurationAsync());
-
-    /// <summary>
-    /// Retrieves statistics about rental durations, including minimum, maximum, and average.
-    /// </summary>
-    [HttpGet("duration-stats")]
-    public async Task<IActionResult> GetDurationStats()
+    public AnalyticsController(IAnalyticsService service, ILogger<AnalyticsController> logger)
     {
-        var (min, max, avg) = await _service.GetRentalDurationStatsAsync();
-        return Ok(new { min, max, avg });
+        _service = service;
+        _logger = logger;
     }
 
-    /// <summary>
-    /// Retrieves total rental duration for bikes of a specific type.
-    /// </summary>
-    [HttpGet("duration-by-type")]
-    public async Task<IActionResult> GetDurationByType(BikeType type)
-        => Ok(await _service.GetTotalDurationByBikeTypeAsync(type));
+    [HttpGet("sport-models")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<string>>> GetSportModels()
+    {
+        try
+        {
+            var result = await _service.GetSportModelsAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при получении спортивных моделей");
+            return StatusCode(500, "Произошла ошибка при обработке запроса");
+        }
+    }
 
-    /// <summary>
-    /// Retrieves the top 3 renters based on total rentals.
-    /// </summary>
+    [HttpGet("top-profit")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<TopModelProfitDto>>> GetTop5Profit()
+    {
+        try
+        {
+            var result = await _service.GetTop5ModelsByProfitAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при получении топ-5 моделей по прибыли");
+            return StatusCode(500, "Произошла ошибка при обработке запроса");
+        }
+    }
+
+    [HttpGet("top-duration")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<TopModelDurationDto>>> GetTop5Duration()
+    {
+        try
+        {
+            var result = await _service.GetTop5ModelsByDurationAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при получении топ-5 моделей по продолжительности аренды");
+            return StatusCode(500, "Произошла ошибка при обработке запроса");
+        }
+    }
+
+    [HttpGet("duration-stats")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<RentalDurationStatsDto>> GetDurationStats()
+    {
+        try
+        {
+            var result = await _service.GetRentalDurationStatsAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при получении статистики по продолжительности аренды");
+            return StatusCode(500, "Произошла ошибка при обработке запроса");
+        }
+    }
+
+    [HttpGet("duration-by-type")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<double>> GetDurationByType(BikeType type)
+    {
+        try
+        {
+            var result = await _service.GetTotalDurationByBikeTypeAsync(type);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при получении суммарной продолжительности аренды по типу велосипеда");
+            return StatusCode(500, "Произошла ошибка при обработке запроса");
+        }
+    }
+
     [HttpGet("top-renters")]
-    public async Task<IActionResult> GetTopRenters()
-        => Ok(await _service.GetTop3RentersAsync());
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<TopRenterDto>>> GetTopRenters()
+    {
+        try
+        {
+            var result = await _service.GetTop3RentersAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при получении топ-3 арендаторов");
+            return StatusCode(500, "Произошла ошибка при обработке запроса");
+        }
+    }
 }

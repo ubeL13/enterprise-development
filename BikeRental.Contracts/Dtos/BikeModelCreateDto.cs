@@ -1,27 +1,19 @@
-namespace BikeRental.Api.DTO;
 using BikeRental.Domain.Enums;
 
+namespace BikeRental.Contracts.Dtos;
 
 /// <summary>
-/// Data transfer object representing a bike model.
+/// Data transfer object for creating a new bike model.
 /// </summary>
-public class BikeModelDto
+public class BikeModelCreateDto
 {
-    /// <summary>
-    /// Unique identifier of the bike model.
-    /// </summary>
-    public required string Id { get; set; }
-
     /// <summary>
     /// Name of the bike model.
     /// </summary>
-    public required string Name
-    {
-        get; set;
-    }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Type of the bike (e.g., Road, Mountain, Sport).
+    /// Type of the bike.
     /// </summary>
     public BikeType Type { get; set; }
 
@@ -43,7 +35,7 @@ public class BikeModelDto
     /// <summary>
     /// Type of brakes used on the bike.
     /// </summary>
-    public required string? BrakeType { get; set; }
+    public string? BrakeType { get; set; }
 
     /// <summary>
     /// Year of the bike model.

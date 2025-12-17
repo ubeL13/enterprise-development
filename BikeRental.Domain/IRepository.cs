@@ -1,4 +1,4 @@
-namespace BikeRental.Infrastructure.Repositories;
+namespace BikeRental.Domain;
 
 /// <summary>
 /// Generic repository interface for basic CRUD operations.

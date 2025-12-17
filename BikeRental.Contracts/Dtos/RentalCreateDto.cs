@@ -1,4 +1,4 @@
-namespace BikeRental.Api.DTO;
+namespace BikeRental.Contracts.Dtos;
 
 /// <summary>
 /// Data transfer object for creating a new rental.

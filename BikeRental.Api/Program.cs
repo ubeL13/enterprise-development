@@ -1,9 +1,13 @@
 using BikeRental.Domain.Models;
+using BikeRental.Domain;
 using BikeRental.Infrastructure;
 using BikeRental.Infrastructure.Repositories;
-using BikeRental.Api.Services;
+using BikeRental.Application.Services;
 using BikeRental.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
+using BikeRental.Contracts.Interfaces;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +28,7 @@ builder.Services.AddDbContext<MongoDbContext>(options =>
 });
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
-builder.Services.AddScoped<AnalyticsService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
