@@ -29,6 +29,8 @@ builder.Services.AddDbContext<MongoDbContext>(options =>
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+builder.Services.AddScoped<IBikeModelService, BikeModelService>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

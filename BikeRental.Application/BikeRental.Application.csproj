@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BikeRental.Domain\BikeRental.Domain.csproj" />
     <ProjectReference Include="..\BikeRental.Contracts\BikeRental.Contracts.csproj" />
+  
   </ItemGroup>
 
   <PropertyGroup>
