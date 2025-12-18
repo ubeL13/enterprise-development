@@ -1,9 +1,5 @@
 using BikeRental.Contracts.Dtos;
 using BikeRental.Contracts.Interfaces;
-using BikeRental.Domain.Enums;
-using BikeRental.Domain.Models;
-using BikeRental.Domain;
-using BikeRental.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Controllers;
@@ -15,12 +11,15 @@ public class BikeModelsController : ControllerBase
     private readonly IBikeModelService _service;
     private readonly ILogger<BikeModelsController> _logger;
 
-    public BikeModelsController(IBikeModelService service, ILogger<BikeModelsController> logger)
+    public BikeModelsController(
+        IBikeModelService service,
+        ILogger<BikeModelsController> logger)
     {
         _service = service;
         _logger = logger;
     }
 
+    // GET: api/bikemodels
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -33,35 +32,37 @@ public class BikeModelsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error receiving models");
+            _logger.LogError(ex, "Error receiving bike models");
             return StatusCode(500);
         }
     }
 
+    // GET: api/bikemodels/{id}
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<BikeModelDto>> GetById(string id)
     {
         try
         {
             var result = await _service.GetByIdAsync(id);
+            if (result == null)
+                return NotFound();
+
             return Ok(result);
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while reciving id");
+            _logger.LogError(ex, "Error receiving bike model with id {Id}", id);
             return StatusCode(500);
         }
     }
 
+    // POST: api/bikemodels
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPost]
     public async Task<ActionResult<BikeModelDto>> Create(BikeModelCreateDto dto)
     {
         try
@@ -71,43 +72,51 @@ public class BikeModelsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error receiving models");
+            _logger.LogError(ex, "Error creating bike model");
             return StatusCode(500);
         }
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    // PUT: api/bikemodels
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<BikeModelDto>> Update(BikeModelUpdateDto dto)
     {
         try
         {
             var result = await _service.UpdateAsync(dto);
-            if (result == null) return NotFound();
+            if (result == null)
+                return NotFound();
+
             return Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updates models");
+            _logger.LogError(ex, "Error updating bike model");
             return StatusCode(500);
         }
     }
 
+    // DELETE: api/bikemodels/{id}
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(string id)
     {
         try
         {
             var deleted = await _service.DeleteAsync(id);
-            if (!deleted) return NotFound();
+            if (!deleted)
+                return NotFound();
+
             return NoContent();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error while deliting");
+            _logger.LogError(ex, "Error deleting bike model with id {Id}", id);
             return StatusCode(500);
         }
     }

@@ -1,60 +1,112 @@
 using BikeRental.Contracts.Dtos;
-using BikeRental.Domain.Models;
-using BikeRental.Domain;
-using BikeRental.Infrastructure.Repositories;
+using BikeRental.Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using BikeRental.Api.Extensions;
 
 namespace BikeRental.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class BikesController(IRepository<Bike> _bikes, IRepository<BikeModel> _models) : ControllerBase
+[Route("api/bikes")]
+public class BikesController : ControllerBase
 {
-    /// <summary>
-    /// Returns all bikes with their models loaded.
-    /// </summary>
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    private readonly IBikeService _service;
+    private readonly ILogger<BikesController> _logger;
+
+    public BikesController(
+        IBikeService service,
+        ILogger<BikesController> logger)
     {
-        var bikes = await _bikes.GetAllAsync();
-
-        foreach (var bike in bikes)
-            bike.Model = await _models.GetByIdAsync(bike.ModelId);
-
-        return Ok(bikes);
+        _service = service;
+        _logger = logger;
     }
 
-    /// <summary>
-    /// Creates a new bike entity and returns the created bike with its model information populated.
-    /// </summary>
-    [HttpPost]
-    public async Task<IActionResult> Create(BikeCreateDto dto)
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<BikeDto>>> GetAll()
     {
-        
-        var model = await _models.GetByIdAsync(dto.ModelId);
-        if (model == null)
-            return BadRequest($"BikeModel with id {dto.ModelId} not found");
-
-        var newBike = new Bike
+        try
         {
-            SerialNumber = dto.SerialNumber,
-            Color = dto.Color,
-            ModelId = dto.ModelId
-        };
+            var result = await _service.GetAllAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error receiving bikes");
+            return StatusCode(500);
+        }
+    }
 
-        await _bikes.CreateAsync(newBike);
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<BikeDto>> GetById(string id)
+    {
+        try
+        {
+            var result = await _service.GetByIdAsync(id);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error receiving bike by id {Id}", id);
+            return StatusCode(500);
+        }
+    }
 
-        var result = newBike.ToDto(); 
-        result.Model = model.ToDto();
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<BikeDto>> Create(BikeCreateDto dto)
+    {
+        try
+        {
+            var result = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating bike");
+            return StatusCode(500);
+        }
+    }
 
-        return Ok(result);
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<BikeDto>> Update(BikeUpdateDto dto)
+    {
+        try
+        {
+            var result = await _service.UpdateAsync(dto);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating bike");
+            return StatusCode(500);
+        }
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(string id)
     {
-        await _bikes.DeleteAsync(id);
-        return NoContent();
+        try
+        {
+            var deleted = await _service.DeleteAsync(id);
+            if (!deleted) return NotFound();
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting bike with id {Id}", id);
+            return StatusCode(500);
+        }
     }
 }

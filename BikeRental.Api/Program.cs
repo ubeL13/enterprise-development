@@ -30,6 +30,10 @@ builder.Services.AddDbContext<MongoDbContext>(options =>
 builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<IBikeModelService, BikeModelService>();
+builder.Services.AddScoped<IBikeService, BikeService>();
+builder.Services.AddScoped<IRentalService, RentalService>();
+builder.Services.AddScoped<IRenterService, RenterService>();
+
 
 
 builder.Services.AddControllers();

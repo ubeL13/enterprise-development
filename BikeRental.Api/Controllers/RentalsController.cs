@@ -1,97 +1,112 @@
 using BikeRental.Contracts.Dtos;
+using BikeRental.Contracts.Interfaces;
 using BikeRental.Domain.Models;
-using BikeRental.Domain;
-using BikeRental.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using BikeRental.Api.Extensions;
-
 
 namespace BikeRental.Api.Controllers;
 
-/// <summary>
-/// Controller for managing rentals in the bike rental system.
-/// </summary>
-/// <remarks>
-/// Initializes a new instance of the RentalsController.
-/// </remarks>
 [ApiController]
 [Route("api/[controller]")]
-public class RentalsController(
-    IRepository<Rental> _rentals,
-    IRepository<Bike> _bikes,
-    IRepository<Renter> _renters,
-    IRepository<BikeModel> _models) : ControllerBase
+public class RentalsController : ControllerBase
 {
-    /// <summary>
-    /// Retrieves all rentals.
-    /// </summary>
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    private readonly IRentalService _service;
+    private readonly ILogger<RentalsController> _logger;
+
+    public RentalsController(IRentalService service, ILogger<RentalsController> logger)
     {
-        var rentals = await _rentals.GetAllAsync();
-
-        var result = new List<RentalDto>();
-
-        foreach (var r in rentals)
-        {
-            var bike = await _bikes.GetByIdAsync(r.BikeId);
-            if (bike == null)
-                continue;
-            var renter = await _renters.GetByIdAsync(r.RenterId);
-            bike.Model = await _models.GetByIdAsync(bike.ModelId);
-
-            result.Add(new RentalDto
-            {
-                Id = r.Id,
-                BikeId = r.BikeId,
-                Bike = bike?.ToDto(),
-                RenterId = r.RenterId,
-                Renter = renter?.ToDto(),
-                StartTime = r.StartTime,
-                DurationHours = r.DurationHours
-            });
-        }
-
-        return Ok(result);
+        _service = service;
+        _logger = logger;
     }
 
-    /// <summary>
-    /// Creates a new rental.
-    /// </summary>
-    [HttpPost]
-    public async Task<IActionResult> Create(RentalCreateDto dto)
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IEnumerable<RentalDto>>> GetAll()
     {
-        var bike = await _bikes.GetByIdAsync(dto.BikeId);
-        if (bike == null)
-            return NotFound($"Bike with id {dto.BikeId} not found");
-
-        var renter = await _renters.GetByIdAsync(dto.RenterId);
-        if (renter == null)
-            return NotFound($"Renter with id {dto.RenterId} not found");
-
-        bike.Model = await _models.GetByIdAsync(bike.ModelId);
-
-        var rental = new Rental
+        try
         {
-            BikeId = dto.BikeId,
-            RenterId = dto.RenterId,
-            StartTime = dto.StartTime,
-            DurationHours = dto.DurationHours
-        };
-
-        await _rentals.CreateAsync(rental);
-
-        var result = new RentalDto
+            var rentals = await _service.GetAllAsync();
+            return Ok(rentals);
+        }
+        catch (Exception ex)
         {
-            Id = rental.Id,
-            BikeId = rental.BikeId,
-            Bike = bike.ToDto(),           
-            RenterId = rental.RenterId,
-            Renter = renter.ToDto(),       
-            StartTime = rental.StartTime,
-            DurationHours = rental.DurationHours
-        };
+            _logger.LogError(ex, "Error getting rentals");
+            return StatusCode(500, "Internal server error");
+        }
+    }
 
-        return Ok(result);
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<RentalDto>> GetById(string id)
+    {
+        try
+        {
+            var rental = await _service.GetByIdAsync(id);
+            if (rental == null) return NotFound();
+            return Ok(rental);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error getting rental by id {id}");
+            return StatusCode(500);
+        }
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<RentalDto>> Create(RentalCreateDto dto)
+    {
+        try
+        {
+            var rental = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = rental.Id }, rental);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating rental");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<RentalDto>> Update(RentalUpdateDto dto)
+    {
+        try
+        {
+            var rental = await _service.UpdateAsync(dto);
+            if (rental == null) return NotFound();
+            return Ok(rental);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating rental");
+            return StatusCode(500);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Delete(string id)
+    {
+        try
+        {
+            var deleted = await _service.DeleteAsync(id);
+            if (!deleted) return NotFound();
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error deleting rental with id {id}");
+            return StatusCode(500);
+        }
     }
 }
