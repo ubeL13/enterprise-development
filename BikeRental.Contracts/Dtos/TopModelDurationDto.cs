@@ -1,7 +1,18 @@
-namespace BikeRental.Contracts.Dtos;
-
-public class TopModelDurationDto
+namespace BikeRental.Contracts.Dtos
 {
-	public string Model { get; set; } = string.Empty;
-	public int TotalHours { get; set; }
+	/// <summary>
+	/// Data transfer object representing total rental duration for a specific bike model.
+	/// </summary>
+	public class TopModelDurationDto
+	{
+		/// <summary>
+		/// Name of the bike model.
+		/// </summary>
+		public string Model { get; set; } = string.Empty;
+
+		/// <summary>
+		/// Total rental duration for the model in hours.
+		/// </summary>
+		public int TotalHours { get; set; }
+	}
 }

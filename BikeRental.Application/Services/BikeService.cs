@@ -3,36 +3,78 @@ using BikeRental.Contracts.Interfaces;
 using BikeRental.Domain.Models;
 using BikeRental.Domain;
 
-namespace BikeRental.Application.Services;
-
-public class BikeService : IBikeService
+namespace BikeRental.Application.Services
 {
-    private readonly IRepository<Bike> _bikes;
-    private readonly IRepository<BikeModel> _models;
-
-    public BikeService(
-        IRepository<Bike> bikes,
-        IRepository<BikeModel> models)
+    /// <summary>
+    /// Service implementation for managing bikes.
+    /// </summary>
+    public class BikeService : IBikeService
     {
-        _bikes = bikes;
-        _models = models;
-    }
+        private readonly IRepository<Bike> _bikes;
+        private readonly IRepository<BikeModel> _models;
 
-    public async Task<IEnumerable<BikeDto>> GetAllAsync()
-    {
-        var bikes = await _bikes.GetAllAsync();
-        var models = await _models.GetAllAsync();
-
-        return bikes.Select(b =>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BikeService"/> class.
+        /// </summary>
+        public BikeService(
+            IRepository<Bike> bikes,
+            IRepository<BikeModel> models)
         {
-            var model = models.First(m => m.Id == b.ModelId);
+            _bikes = bikes;
+            _models = models;
+        }
+
+        /// <summary>
+        /// Retrieves all bikes with their associated models.
+        /// </summary>
+        public async Task<IEnumerable<BikeDto>> GetAllAsync()
+        {
+            var bikes = await _bikes.GetAllAsync();
+            var models = await _models.GetAllAsync();
+
+            return bikes.Select(b =>
+            {
+                var model = models.First(m => m.Id == b.ModelId);
+
+                return new BikeDto
+                {
+                    Id = b.Id,
+                    SerialNumber = b.SerialNumber,
+                    Color = b.Color,
+                    ModelId = b.ModelId,
+                    Model = new BikeModelDto
+                    {
+                        Id = model.Id,
+                        Name = model.Name,
+                        Type = model.Type,
+                        WheelSize = model.WheelSize,
+                        BikeWeight = model.BikeWeight,
+                        MaxRiderWeight = model.MaxRiderWeight,
+                        BrakeType = model.BrakeType,
+                        ModelYear = model.ModelYear,
+                        HourlyRate = model.HourlyRate
+                    }
+                };
+            });
+        }
+
+        /// <summary>
+        /// Retrieves a bike by its unique identifier, including its model.
+        /// </summary>
+        public async Task<BikeDto?> GetByIdAsync(string id)
+        {
+            var bike = await _bikes.GetByIdAsync(id);
+            if (bike == null) return null;
+
+            var model = await _models.GetByIdAsync(bike.ModelId);
+            if (model == null) return null;
 
             return new BikeDto
             {
-                Id = b.Id,
-                SerialNumber = b.SerialNumber,
-                Color = b.Color,
-                ModelId = b.ModelId,
+                Id = bike.Id,
+                SerialNumber = bike.SerialNumber,
+                Color = bike.Color,
+                ModelId = bike.ModelId,
                 Model = new BikeModelDto
                 {
                     Id = model.Id,
@@ -46,75 +88,55 @@ public class BikeService : IBikeService
                     HourlyRate = model.HourlyRate
                 }
             };
-        });
-    }
+        }
 
-    public async Task<BikeDto?> GetByIdAsync(string id)
-    {
-        var bike = await _bikes.GetByIdAsync(id);
-        if (bike == null) return null;
-
-        var model = await _models.GetByIdAsync(bike.ModelId);
-        if (model == null) return null;
-
-        return new BikeDto
+        /// <summary>
+        /// Creates a new bike.
+        /// </summary>
+        public async Task<BikeDto> CreateAsync(BikeCreateDto dto)
         {
-            Id = bike.Id,
-            SerialNumber = bike.SerialNumber,
-            Color = bike.Color,
-            ModelId = bike.ModelId,
-            Model = new BikeModelDto
+            var model = await _models.GetByIdAsync(dto.ModelId)
+                ?? throw new ArgumentException("Bike model not found");
+
+            var bike = new Bike
             {
-                Id = model.Id,
-                Name = model.Name,
-                Type = model.Type,
-                WheelSize = model.WheelSize,
-                BikeWeight = model.BikeWeight,
-                MaxRiderWeight = model.MaxRiderWeight,
-                BrakeType = model.BrakeType,
-                ModelYear = model.ModelYear,
-                HourlyRate = model.HourlyRate
-            }
-        };
-    }
+                SerialNumber = dto.SerialNumber,
+                Color = dto.Color,
+                ModelId = dto.ModelId
+            };
 
-    public async Task<BikeDto> CreateAsync(BikeCreateDto dto)
-    {
-        var model = await _models.GetByIdAsync(dto.ModelId)
-            ?? throw new ArgumentException("Bike model not found");
+            await _bikes.CreateAsync(bike);
 
-        var bike = new Bike
+            return (await GetByIdAsync(bike.Id))!;
+        }
+
+        /// <summary>
+        /// Updates an existing bike.
+        /// </summary>
+        public async Task<BikeDto?> UpdateAsync(BikeUpdateDto dto)
         {
-            SerialNumber = dto.SerialNumber,
-            Color = dto.Color,
-            ModelId = dto.ModelId
-        };
+            var bike = await _bikes.GetByIdAsync(dto.Id);
+            if (bike == null) return null;
 
-        await _bikes.CreateAsync(bike);
+            bike.SerialNumber = dto.SerialNumber;
+            bike.Color = dto.Color;
+            bike.ModelId = dto.ModelId;
 
-        return (await GetByIdAsync(bike.Id))!;
-    }
+            await _bikes.UpdateAsync(bike.Id, bike);
 
-    public async Task<BikeDto?> UpdateAsync(BikeUpdateDto dto)
-    {
-        var bike = await _bikes.GetByIdAsync(dto.Id);
-        if (bike == null) return null;
+            return await GetByIdAsync(bike.Id);
+        }
 
-        bike.SerialNumber = dto.SerialNumber;
-        bike.Color = dto.Color;
-        bike.ModelId = dto.ModelId;
+        /// <summary>
+        /// Deletes a bike by its unique identifier.
+        /// </summary>
+        public async Task<bool> DeleteAsync(string id)
+        {
+            var bike = await _bikes.GetByIdAsync(id);
+            if (bike == null) return false;
 
-        await _bikes.UpdateAsync(bike.Id, bike);
-
-        return await GetByIdAsync(bike.Id);
-    }
-
-    public async Task<bool> DeleteAsync(string id)
-    {
-        var bike = await _bikes.GetByIdAsync(id);
-        if (bike == null) return false;
-
-        await _bikes.DeleteAsync(id);
-        return true;
+            await _bikes.DeleteAsync(id);
+            return true;
+        }
     }
 }

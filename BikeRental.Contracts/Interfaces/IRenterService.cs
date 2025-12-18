@@ -1,12 +1,36 @@
 using BikeRental.Contracts.Dtos;
 
-namespace BikeRental.Contracts.Interfaces;
-
-public interface IRenterService
+namespace BikeRental.Contracts.Interfaces
 {
-    Task<IEnumerable<RenterDto>> GetAllAsync();
-    Task<RenterDto?> GetByIdAsync(string id);
-    Task<RenterDto> CreateAsync(RenterCreateDto dto);
-    Task<RenterDto?> UpdateAsync(RenterUpdateDto dto);
-    Task<bool> DeleteAsync(string id);
+    /// <summary>
+    /// Service interface for managing renters.
+    /// </summary>
+    public interface IRenterService
+    {
+        /// <summary>
+        /// Retrieves all renters.
+        /// </summary>
+        Task<IEnumerable<RenterDto>> GetAllAsync();
+
+        /// <summary>
+        /// Retrieves a renter by its unique identifier.
+        /// </summary>
+        Task<RenterDto?> GetByIdAsync(string id);
+
+        /// <summary>
+        /// Creates a new renter.
+        /// </summary>
+        Task<RenterDto> CreateAsync(RenterCreateDto dto);
+
+        /// <summary>
+        /// Updates an existing renter.
+        /// </summary>
+        Task<RenterDto?> UpdateAsync(RenterUpdateDto dto);
+
+        /// <summary>
+        /// Deletes a renter by its unique identifier.
+        /// </summary>
+        Task<bool> DeleteAsync(string id);
+    }
 }
+

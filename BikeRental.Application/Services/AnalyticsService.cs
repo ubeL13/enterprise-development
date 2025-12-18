@@ -7,7 +7,7 @@ using BikeRental.Domain;
 namespace BikeRental.Application.Services;
 
 /// <summary>
-/// Provides analytics data for the bike rental system.
+/// Provides analytics data and statistics for the bike rental system.
 /// </summary>
 public class AnalyticsService(
     IRepository<Rental> rentals,
@@ -16,7 +16,9 @@ public class AnalyticsService(
     IRepository<Renter> renters)
     : IAnalyticsService
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the names of all bike models of type Sport.
+    /// </summary>
     public async Task<IEnumerable<string>> GetSportModelsAsync()
     {
         var allModels = await models.GetAllAsync();
@@ -26,7 +28,9 @@ public class AnalyticsService(
             .Select(m => m.Name);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the top 5 bike models ranked by total rental profit.
+    /// </summary>
     public async Task<IEnumerable<TopModelProfitDto>> GetTop5ModelsByProfitAsync()
     {
         var allRentals = await rentals.GetAllAsync();
@@ -47,7 +51,9 @@ public class AnalyticsService(
             .Take(5);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the top 5 bike models ranked by total rental duration.
+    /// </summary>
     public async Task<IEnumerable<TopModelDurationDto>> GetTop5ModelsByDurationAsync()
     {
         var allRentals = await rentals.GetAllAsync();
@@ -68,7 +74,9 @@ public class AnalyticsService(
             .Take(5);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns minimum, maximum and average rental duration values.
+    /// </summary>
     public async Task<RentalDurationStatsDto> GetRentalDurationStatsAsync()
     {
         var allRentals = await rentals.GetAllAsync();
@@ -86,7 +94,9 @@ public class AnalyticsService(
         };
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the total rental duration for a specified bike type.
+    /// </summary>
     public async Task<double> GetTotalDurationByBikeTypeAsync(BikeType type)
     {
         var allRentals = await rentals.GetAllAsync();
@@ -102,7 +112,9 @@ public class AnalyticsService(
             .Sum();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the top 3 renters ranked by number of rentals.
+    /// </summary>
     public async Task<IEnumerable<TopRenterDto>> GetTop3RentersAsync()
     {
         var allRentals = await rentals.GetAllAsync();

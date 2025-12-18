@@ -1,12 +1,35 @@
 using BikeRental.Contracts.Dtos;
 
-namespace BikeRental.Contracts.Interfaces;
-
-public interface IBikeModelService
+namespace BikeRental.Contracts.Interfaces
 {
-    Task<IEnumerable<BikeModelDto>> GetAllAsync();
-    Task<BikeModelDto> GetByIdAsync(string id);
-    Task<BikeModelDto> CreateAsync(BikeModelCreateDto dto);
-    Task<BikeModelDto?> UpdateAsync(BikeModelUpdateDto dto);
-    Task<bool> DeleteAsync(string id);
+    /// <summary>
+    /// Service interface for managing bike models.
+    /// </summary>
+    public interface IBikeModelService
+    {
+        /// <summary>
+        /// Retrieves all bike models.
+        /// </summary>
+        Task<IEnumerable<BikeModelDto>> GetAllAsync();
+
+        /// <summary>
+        /// Retrieves a bike model by its unique identifier.
+        /// </summary>
+        Task<BikeModelDto> GetByIdAsync(string id);
+
+        /// <summary>
+        /// Creates a new bike model.
+        /// </summary>
+        Task<BikeModelDto> CreateAsync(BikeModelCreateDto dto);
+
+        /// <summary>
+        /// Updates an existing bike model.
+        /// </summary>
+        Task<BikeModelDto?> UpdateAsync(BikeModelUpdateDto dto);
+
+        /// <summary>
+        /// Deletes a bike model by its unique identifier.
+        /// </summary>
+        Task<bool> DeleteAsync(string id);
+    }
 }

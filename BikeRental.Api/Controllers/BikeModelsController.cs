@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Controllers;
 
+/// <summary>
+/// Manages CRUD operations for bike models.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class BikeModelsController : ControllerBase
@@ -19,7 +22,9 @@ public class BikeModelsController : ControllerBase
         _logger = logger;
     }
 
-    // GET: api/bikemodels
+    /// <summary>
+    /// Retrieves all bike models.
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -27,17 +32,18 @@ public class BikeModelsController : ControllerBase
     {
         try
         {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
+            return Ok(await _service.GetAllAsync());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error receiving bike models");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to retrieve bike models");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    // GET: api/bikemodels/{id}
+    /// <summary>
+    /// Retrieves a bike model by its ID.
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -47,77 +53,95 @@ public class BikeModelsController : ControllerBase
         try
         {
             var result = await _service.GetByIdAsync(id);
-            if (result == null)
-                return NotFound();
-
-            return Ok(result);
+            return result == null ? NotFound() : Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error receiving bike model with id {Id}", id);
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to retrieve bike model with id {Id}", id);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    // POST: api/bikemodels
+    /// <summary>
+    /// Creates a new bike model.
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<BikeModelDto>> Create(BikeModelCreateDto dto)
+    public async Task<ActionResult<BikeModelDto>> Create([FromBody] BikeModelCreateDto dto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         try
         {
             var result = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+            return BadRequest(ex.Message);
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating bike model");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to create bike model");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    // PUT: api/bikemodels
-    [HttpPut]
+    /// <summary>
+    /// Updates an existing bike model.
+    /// </summary>
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<BikeModelDto>> Update(BikeModelUpdateDto dto)
+    public async Task<ActionResult<BikeModelDto>> Update(string id, [FromBody] BikeModelUpdateDto dto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if (id != dto.Id)
+            return BadRequest("Route id does not match DTO id");
+
         try
         {
             var result = await _service.UpdateAsync(dto);
-            if (result == null)
-                return NotFound();
-
-            return Ok(result);
+            return result == null ? NotFound() : Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating bike model");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to update bike model with id {Id}", id);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    // DELETE: api/bikemodels/{id}
+    /// <summary>
+    /// Deletes a bike model by its ID.
+    /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<ActionResult> Delete(string id)
     {
         try
         {
             var deleted = await _service.DeleteAsync(id);
-            if (!deleted)
-                return NotFound();
-
-            return NoContent();
+            return deleted ? NoContent() : NotFound();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting bike model with id {Id}", id);
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to delete bike model with id {Id}", id);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 }

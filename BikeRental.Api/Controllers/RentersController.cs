@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BikeRental.Api.Controllers;
 
+/// <summary>
+/// Manages CRUD operations for renters.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class RentersController : ControllerBase
@@ -11,12 +14,17 @@ public class RentersController : ControllerBase
     private readonly IRenterService _service;
     private readonly ILogger<RentersController> _logger;
 
-    public RentersController(IRenterService service, ILogger<RentersController> logger)
+    public RentersController(
+        IRenterService service,
+        ILogger<RentersController> logger)
     {
         _service = service;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Retrieves all renters.
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -24,16 +32,18 @@ public class RentersController : ControllerBase
     {
         try
         {
-            var renters = await _service.GetAllAsync();
-            return Ok(renters);
+            return Ok(await _service.GetAllAsync());
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting renters");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to retrieve renters");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
+    /// <summary>
+    /// Retrieves a renter by its ID.
+    /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -43,68 +53,95 @@ public class RentersController : ControllerBase
         try
         {
             var renter = await _service.GetByIdAsync(id);
-            if (renter == null) return NotFound();
-            return Ok(renter);
+            return renter == null ? NotFound() : Ok(renter);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error getting renter by id {id}");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to retrieve renter with id {Id}", id);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
+    /// <summary>
+    /// Creates a new renter.
+    /// </summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<RenterDto>> Create(RenterCreateDto dto)
+    public async Task<ActionResult<RenterDto>> Create([FromBody] RenterCreateDto dto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         try
         {
             var renter = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = renter.Id }, renter);
         }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+            return BadRequest(ex.Message);
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating renter");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to create renter");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    [HttpPut]
+    /// <summary>
+    /// Updates an existing renter.
+    /// </summary>
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<RenterDto>> Update(RenterUpdateDto dto)
+    public async Task<ActionResult<RenterDto>> Update(string id, [FromBody] RenterUpdateDto dto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if (id != dto.Id)
+            return BadRequest("Route id does not match DTO id");
+
         try
         {
             var renter = await _service.UpdateAsync(dto);
-            if (renter == null) return NotFound();
-            return Ok(renter);
+            return renter == null ? NotFound() : Ok(renter);
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating renter");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to update renter with id {Id}", id);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
+    /// <summary>
+    /// Deletes a renter by its ID.
+    /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<ActionResult> Delete(string id)
     {
         try
         {
             var deleted = await _service.DeleteAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
+            return deleted ? NoContent() : NotFound();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error deleting renter with id {id}");
-            return StatusCode(500);
+            _logger.LogError(ex, "Failed to delete renter with id {Id}", id);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 }

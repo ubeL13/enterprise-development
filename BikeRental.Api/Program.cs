@@ -7,8 +7,6 @@ using BikeRental.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using BikeRental.Contracts.Interfaces;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<MongoDbSettings>(options =>
@@ -33,8 +31,6 @@ builder.Services.AddScoped<IBikeModelService, BikeModelService>();
 builder.Services.AddScoped<IBikeService, BikeService>();
 builder.Services.AddScoped<IRentalService, RentalService>();
 builder.Services.AddScoped<IRenterService, RenterService>();
-
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
