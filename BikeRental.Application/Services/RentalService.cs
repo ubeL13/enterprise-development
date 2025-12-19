@@ -6,21 +6,17 @@ using BikeRental.Domain;
 namespace BikeRental.Application.Services;
 
 /// <summary>
-/// Service implementation for managing bike rentals.
+/// Provides CRUD operations and business logic for managing bike rentals.
+/// Handles mapping between domain models and DTOs.
 /// </summary>
 public class RentalService(
-    IRepository<Rental> rentals,
-    IRepository<Bike> bikes,
-    IRepository<Renter> renters,
-    IRepository<BikeModel> models
+    IRepository<Rental> _rentals,
+    IRepository<Bike> _bikes,
+    IRepository<Renter> _renters,
+    IRepository<BikeModel> _models
 ) : IRentalService
 {
-    private readonly IRepository<Rental> _rentals = rentals;
-    private readonly IRepository<Bike> _bikes = bikes;
-    private readonly IRepository<Renter> _renters = renters;
-    private readonly IRepository<BikeModel> _models = models;
-
-    private static BikeModelDto ToDto(BikeModel m) => new()
+    private static BikeModelDto ToModelDto(BikeModel m) => new()
     {
         Id = m.Id,
         Name = m.Name,
@@ -33,68 +29,81 @@ public class RentalService(
         HourlyRate = m.HourlyRate
     };
 
-    private static BikeDto ToDto(Bike b) => new()
+    private static BikeDto ToBikeDto(Bike b, BikeModel? m) => new()
     {
         Id = b.Id,
         SerialNumber = b.SerialNumber,
         Color = b.Color,
         ModelId = b.ModelId,
-        Model = b.Model != null ? ToDto(b.Model) : null
+        Model = m != null ? ToModelDto(m) : null
     };
 
-    private static RenterDto ToDto(Renter r) => new()
+    private static RenterDto ToRenterDto(Renter r) => new()
     {
         Id = r.Id,
         FullName = r.FullName,
         Phone = r.Phone
     };
 
-    private static RentalDto ToDto(Rental r, Bike b, Renter ren) => new()
+    private static RentalDto ToRentalDto(Rental r, BikeDto b, RenterDto ren) => new()
     {
         Id = r.Id,
         BikeId = r.BikeId,
-        Bike = ToDto(b),
+        Bike = b,
         RenterId = r.RenterId,
-        Renter = ToDto(ren),
+        Renter = ren,
         StartTime = r.StartTime,
         DurationHours = r.DurationHours
     };
 
-    public async Task<IEnumerable<RentalDto>> GetAllAsync()
+    /// <summary>
+    /// Retrieves all rentals with their associated bikes and renters.
+    /// </summary>
+   public async Task<IEnumerable<RentalDto>> GetAllAsync()
     {
         var rentals = await _rentals.GetAllAsync();
+        var bikes = (await _bikes.GetAllAsync()).ToDictionary(b => b.Id);
+        var models = (await _models.GetAllAsync()).ToDictionary(m => m.Id);
+        var renters = (await _renters.GetAllAsync()).ToDictionary(r => r.Id);
+
         var result = new List<RentalDto>();
 
         foreach (var r in rentals)
         {
-            var bike = await _bikes.GetByIdAsync(r.BikeId);
-            var renter = await _renters.GetByIdAsync(r.RenterId);
+            if (!bikes.TryGetValue(r.BikeId, out var bike)) continue;
+            if (!renters.TryGetValue(r.RenterId, out var renter)) continue;
 
-            if (bike == null || renter == null) continue;
+            models.TryGetValue(bike.ModelId, out var model);
 
-            bike.Model = await _models.GetByIdAsync(bike.ModelId);
+            var bikeDto = ToBikeDto(bike, model);
+            var renterDto = ToRenterDto(renter);
 
-            result.Add(ToDto(r, bike, renter));
+            result.Add(ToRentalDto(r, bikeDto, renterDto));
         }
 
         return result;
     }
 
+    /// <summary>
+    /// Retrieves a single rental by its unique identifier.
+    /// </summary>
     public async Task<RentalDto?> GetByIdAsync(string id)
     {
-        var r = await _rentals.GetByIdAsync(id);
-        if (r == null) return null;
+        var rental = await _rentals.GetByIdAsync(id);
+        if (rental == null) return null;
 
-        var bike = await _bikes.GetByIdAsync(r.BikeId);
-        var renter = await _renters.GetByIdAsync(r.RenterId);
-
+        var bike = await _bikes.GetByIdAsync(rental.BikeId);
+        var renter = await _renters.GetByIdAsync(rental.RenterId);
         if (bike == null || renter == null) return null;
 
-        bike.Model = await _models.GetByIdAsync(bike.ModelId);
+        var model = await _models.GetByIdAsync(bike.ModelId);
 
-        return ToDto(r, bike, renter);
+        return ToRentalDto(rental, ToBikeDto(bike, model), ToRenterDto(renter));
     }
 
+    /// <summary>
+    /// Creates a new rental in the system.
+    /// </summary>
     public async Task<RentalDto> CreateAsync(RentalCreateDto dto)
     {
         var bike = await _bikes.GetByIdAsync(dto.BikeId)
@@ -103,7 +112,7 @@ public class RentalService(
         var renter = await _renters.GetByIdAsync(dto.RenterId)
                      ?? throw new KeyNotFoundException($"Renter {dto.RenterId} not found");
 
-        bike.Model = await _models.GetByIdAsync(bike.ModelId);
+        var model = await _models.GetByIdAsync(bike.ModelId);
 
         var rental = new Rental
         {
@@ -115,9 +124,12 @@ public class RentalService(
 
         await _rentals.CreateAsync(rental);
 
-        return ToDto(rental, bike, renter);
+        return ToRentalDto(rental, ToBikeDto(bike, model), ToRenterDto(renter));
     }
 
+    /// <summary>
+    /// Updates an existing rental.
+    /// </summary>
     public async Task<RentalDto?> UpdateAsync(RentalUpdateDto dto)
     {
         var rental = await _rentals.GetByIdAsync(dto.Id);
@@ -136,12 +148,15 @@ public class RentalService(
 
         await _rentals.UpdateAsync(rental.Id, rental);
 
-        bike.Model = await _models.GetByIdAsync(bike.ModelId);
+        var model = await _models.GetByIdAsync(bike.ModelId);
 
-        return ToDto(rental, bike, renter);
+        return ToRentalDto(rental, ToBikeDto(bike, model), ToRenterDto(renter));
     }
 
-    public async Task<bool> DeleteAsync(string id)
+    /// <summary>
+    /// Deletes a rental by its unique identifier.
+    /// </summary>
+     public async Task<bool> DeleteAsync(string id)
     {
         var rental = await _rentals.GetByIdAsync(id);
         if (rental == null) return false;

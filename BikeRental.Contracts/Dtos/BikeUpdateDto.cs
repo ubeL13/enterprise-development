@@ -1,34 +1,35 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BikeRental.Contracts.Dtos;
 
 /// <summary>
-/// Data transfer object representing a bike.
+/// Data transfer object for updating an existing bike.
 /// </summary>
 public class BikeUpdateDto
 {
     /// <summary>
     /// Unique identifier of the bike.
     /// </summary>
-    public required string Id { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Id is required")]
+    public string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// Serial number of the bike.
     /// </summary>
-    public required string SerialNumber { get; set; } = string.Empty;
-
+    [Required(ErrorMessage = "Serial number is required")]
+    [StringLength(50, ErrorMessage = "Serial number cannot exceed 50 characters")]
+    public string SerialNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// Color of the bike.
     /// </summary>
-    public required string Color { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Color is required")]
+    [StringLength(30, ErrorMessage = "Color cannot exceed 30 characters")]
+    public string Color { get; set; } = string.Empty;
 
     /// <summary>
     /// Identifier of the bike model.
     /// </summary>
-    public required string ModelId { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Model of the bike.
-    /// </summary>
-    public BikeModelDto? Model { get; set; }
-
+    [Required(ErrorMessage = "ModelId is required")]
+    public string ModelId { get; set; } = string.Empty;
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BikeRental.Contracts.Interfaces;
 using BikeRental.Contracts.Dtos;
 using BikeRental.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BikeRental.Api.Controllers;
 
@@ -10,20 +11,10 @@ namespace BikeRental.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/analytics")]
-public class AnalyticsController : ControllerBase
+public class AnalyticsController(
+    IAnalyticsService service,
+    ILogger<AnalyticsController> logger) : ControllerBase
 {
-    private readonly IAnalyticsService _service;
-    private readonly ILogger<AnalyticsController> _logger;
-
-    public AnalyticsController(IAnalyticsService service, ILogger<AnalyticsController> logger)
-    {
-        _service = service;
-        _logger = logger;
-    }
-
-    /// <summary>
-    /// Retrieves all available sport bike models.
-    /// </summary>
     [HttpGet("sport-models")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -31,18 +22,16 @@ public class AnalyticsController : ControllerBase
     {
         try
         {
-            return Ok(await _service.GetSportModelsAsync());
+            var models = await service.GetSportModelsAsync();
+            return Ok(models);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve sport bike models");
+            logger.LogError(ex, "Failed to retrieve sport bike models");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    /// <summary>
-    /// Retrieves the top 5 bike models by total profit.
-    /// </summary>
     [HttpGet("top-profit")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,18 +39,16 @@ public class AnalyticsController : ControllerBase
     {
         try
         {
-            return Ok(await _service.GetTop5ModelsByProfitAsync());
+            var topModels = await service.GetTop5ModelsByProfitAsync();
+            return Ok(topModels);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve top 5 models by profit");
+            logger.LogError(ex, "Failed to retrieve top 5 models by profit");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    /// <summary>
-    /// Retrieves the top 5 bike models by total rental duration.
-    /// </summary>
     [HttpGet("top-duration")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -69,18 +56,16 @@ public class AnalyticsController : ControllerBase
     {
         try
         {
-            return Ok(await _service.GetTop5ModelsByDurationAsync());
+            var topModels = await service.GetTop5ModelsByDurationAsync();
+            return Ok(topModels);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve top 5 models by duration");
+            logger.LogError(ex, "Failed to retrieve top 5 models by duration");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    /// <summary>
-    /// Retrieves rental duration statistics.
-    /// </summary>
     [HttpGet("duration-stats")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -88,41 +73,37 @@ public class AnalyticsController : ControllerBase
     {
         try
         {
-            return Ok(await _service.GetRentalDurationStatsAsync());
+            var stats = await service.GetRentalDurationStatsAsync();
+            return Ok(stats);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve rental duration statistics");
+            logger.LogError(ex, "Failed to retrieve rental duration statistics");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    /// <summary>
-    /// Retrieves total rental duration for a specific bike type.
-    /// </summary>
     [HttpGet("duration-by-type")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<double>> GetDurationByType(BikeType type)
+    public async Task<ActionResult<double>> GetDurationByType([FromQuery, Required] BikeType? type)
     {
-        if (!Enum.IsDefined(typeof(BikeType), type))
-            return BadRequest("Invalid bike type");
+        if (!type.HasValue || !Enum.IsDefined(typeof(BikeType), type.Value))
+            return BadRequest("Invalid or missing bike type");
 
         try
         {
-            return Ok(await _service.GetTotalDurationByBikeTypeAsync(type));
+            var duration = await service.GetTotalDurationByBikeTypeAsync(type.Value);
+            return Ok(duration);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve total duration by bike type");
+            logger.LogError(ex, "Failed to retrieve total duration by bike type");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
-    /// <summary>
-    /// Retrieves the top 3 renters based on rental activity.
-    /// </summary>
     [HttpGet("top-renters")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -130,11 +111,12 @@ public class AnalyticsController : ControllerBase
     {
         try
         {
-            return Ok(await _service.GetTop3RentersAsync());
+            var renters = await service.GetTop3RentersAsync();
+            return Ok(renters);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to retrieve top renters");
+            logger.LogError(ex, "Failed to retrieve top renters");
             return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
