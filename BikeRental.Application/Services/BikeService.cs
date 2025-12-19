@@ -24,6 +24,28 @@ namespace BikeRental.Application.Services
             _models = models;
         }
 
+        private static BikeModelDto ToModelDto(BikeModel m) => new()
+        {
+            Id = m.Id,
+            Name = m.Name,
+            Type = m.Type,
+            WheelSize = m.WheelSize,
+            BikeWeight = m.BikeWeight,
+            MaxRiderWeight = m.MaxRiderWeight,
+            BrakeType = m.BrakeType,
+            ModelYear = m.ModelYear,
+            HourlyRate = m.HourlyRate
+        };
+
+        private static BikeDto ToDto(Bike b, BikeModel m) => new()
+        {
+            Id = b.Id,
+            SerialNumber = b.SerialNumber,
+            Color = b.Color,
+            ModelId = b.ModelId,
+            Model = ToModelDto(m)
+        };
+
         /// <summary>
         /// Retrieves all bikes with their associated models.
         /// </summary>
@@ -32,34 +54,23 @@ namespace BikeRental.Application.Services
             var bikes = await _bikes.GetAllAsync();
             var models = await _models.GetAllAsync();
 
-            return bikes.Select(b =>
-            {
-                var model = models.First(m => m.Id == b.ModelId);
+            var modelMap = models.ToDictionary(m => m.Id);
 
-                return new BikeDto
-                {
-                    Id = b.Id,
-                    SerialNumber = b.SerialNumber,
-                    Color = b.Color,
-                    ModelId = b.ModelId,
-                    Model = new BikeModelDto
-                    {
-                        Id = model.Id,
-                        Name = model.Name,
-                        Type = model.Type,
-                        WheelSize = model.WheelSize,
-                        BikeWeight = model.BikeWeight,
-                        MaxRiderWeight = model.MaxRiderWeight,
-                        BrakeType = model.BrakeType,
-                        ModelYear = model.ModelYear,
-                        HourlyRate = model.HourlyRate
-                    }
-                };
-            });
+            var result = new List<BikeDto>();
+
+            foreach (var bike in bikes)
+            {
+                if (!modelMap.TryGetValue(bike.ModelId, out var model))
+                    continue;
+
+                result.Add(ToDto(bike, model));
+            }
+
+            return result;
         }
 
         /// <summary>
-        /// Retrieves a bike by its unique identifier, including its model.
+        /// Retrieves a bike by its unique identifier.
         /// </summary>
         public async Task<BikeDto?> GetByIdAsync(string id)
         {
@@ -69,25 +80,7 @@ namespace BikeRental.Application.Services
             var model = await _models.GetByIdAsync(bike.ModelId);
             if (model == null) return null;
 
-            return new BikeDto
-            {
-                Id = bike.Id,
-                SerialNumber = bike.SerialNumber,
-                Color = bike.Color,
-                ModelId = bike.ModelId,
-                Model = new BikeModelDto
-                {
-                    Id = model.Id,
-                    Name = model.Name,
-                    Type = model.Type,
-                    WheelSize = model.WheelSize,
-                    BikeWeight = model.BikeWeight,
-                    MaxRiderWeight = model.MaxRiderWeight,
-                    BrakeType = model.BrakeType,
-                    ModelYear = model.ModelYear,
-                    HourlyRate = model.HourlyRate
-                }
-            };
+            return ToDto(bike, model);
         }
 
         /// <summary>
@@ -96,7 +89,7 @@ namespace BikeRental.Application.Services
         public async Task<BikeDto> CreateAsync(BikeCreateDto dto)
         {
             var model = await _models.GetByIdAsync(dto.ModelId)
-                ?? throw new ArgumentException("Bike model not found");
+                ?? throw new KeyNotFoundException($"Bike model {dto.ModelId} not found");
 
             var bike = new Bike
             {
@@ -107,7 +100,7 @@ namespace BikeRental.Application.Services
 
             await _bikes.CreateAsync(bike);
 
-            return (await GetByIdAsync(bike.Id))!;
+            return ToDto(bike, model);
         }
 
         /// <summary>
@@ -118,13 +111,16 @@ namespace BikeRental.Application.Services
             var bike = await _bikes.GetByIdAsync(dto.Id);
             if (bike == null) return null;
 
+            var model = await _models.GetByIdAsync(dto.ModelId)
+                ?? throw new KeyNotFoundException($"Bike model {dto.ModelId} not found");
+
             bike.SerialNumber = dto.SerialNumber;
             bike.Color = dto.Color;
             bike.ModelId = dto.ModelId;
 
             await _bikes.UpdateAsync(bike.Id, bike);
 
-            return await GetByIdAsync(bike.Id);
+            return ToDto(bike, model);
         }
 
         /// <summary>
