@@ -4,22 +4,22 @@ namespace BikeRental.Tests;
 
 public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
 {
-    
+
     /// <summary>
     /// Checks that all models of type Sport are correctly found.
     /// </summary>
     [Fact]
     public void ShouldFindAllSportBikes()
     {
-        List<string> expected =  ["SpeedMax", "TurboSport" ];
+        List<string> expected = ["SpeedMax", "TurboSport"];
 
-            var actual = fixture.Models
-                .Where(m => m.Type == BikeType.Sport)
-                .Select(m => m.Name)
-                .OrderBy(n => n)
-                .ToList();
+        var actual = fixture.Models
+            .Where(m => m.Type == BikeType.Sport)
+            .Select(m => m.Name)
+            .OrderBy(n => n)
+            .ToList();
 
-            Assert.Equal(expected, actual);
+        Assert.Equal(expected, actual);
     }
 
     /// <summary>
@@ -91,8 +91,8 @@ public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
         var durations = fixture.Rentals.Select(r => r.DurationHours).ToList();
 
         var min = 1;
-        var max = 7; 
-        var avg = 4.0; 
+        var max = 7;
+        var avg = 4.0;
 
         Assert.Equal(min, durations.Min());
         Assert.Equal(max, durations.Max());
@@ -123,13 +123,13 @@ public class RentalTests(RentalFixture fixture) : IClassFixture<RentalFixture>
     [Fact]
     public void ShouldFindTopRentersByUsage()
     {
-        List<string> expected = [ 
+        List<string> expected = [
             "Иванов Иван",
-            "Петров Пётр", 
-            "Сидоров Сидор" 
+            "Петров Пётр",
+            "Сидоров Сидор"
         ];
 
-        var actual  = fixture.Rentals
+        var actual = fixture.Rentals
             .GroupBy(r => r.Renter)
             .OrderByDescending(g => g.Count())
             .Take(3)

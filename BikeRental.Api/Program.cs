@@ -1,13 +1,16 @@
-using BikeRental.Domain.Models;
+using BikeRental.Application.Services;
+using BikeRental.Contracts.Interfaces;
 using BikeRental.Domain;
+using BikeRental.Domain.Models;
 using BikeRental.Infrastructure;
 using BikeRental.Infrastructure.Repositories;
-using BikeRental.Application.Services;
 using BikeRental.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
-using BikeRental.Contracts.Interfaces;
+using BikeRental.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 /// <summary>
 /// Configures MongoDB settings
@@ -57,6 +60,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+app.MapDefaultEndpoints();
 
 /// <summary>
 /// Seeds initial data if the database is empty
@@ -78,7 +82,7 @@ static async Task SeedDataAsync(IServiceProvider services)
     var renterRepo = provider.GetRequiredService<IRepository<Renter>>();
     var rentalRepo = provider.GetRequiredService<IRepository<Rental>>();
 
-    if ((await modelRepo.GetAllAsync()).Any())
+    if ((await modelRepo.GetAllAsync()).Count != 0)
         return;
 
     var models = DataSeeder.GetBikeModels();

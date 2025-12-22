@@ -1,7 +1,7 @@
 using BikeRental.Contracts.Dtos;
 using BikeRental.Contracts.Interfaces;
-using BikeRental.Domain.Models;
 using BikeRental.Domain;
+using BikeRental.Domain.Models;
 
 namespace BikeRental.Application.Services;
 
@@ -59,7 +59,7 @@ public class RentalService(
     /// <summary>
     /// Retrieves all rentals with their associated bikes and renters.
     /// </summary>
-   public async Task<IEnumerable<RentalDto>> GetAllAsync()
+    public async Task<IEnumerable<RentalDto>> GetAllAsync()
     {
         var rentals = await _rentals.GetAllAsync();
         var bikes = (await _bikes.GetAllAsync()).ToDictionary(b => b.Id);
@@ -156,7 +156,7 @@ public class RentalService(
     /// <summary>
     /// Deletes a rental by its unique identifier.
     /// </summary>
-     public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(string id)
     {
         var rental = await _rentals.GetByIdAsync(id);
         if (rental == null) return false;

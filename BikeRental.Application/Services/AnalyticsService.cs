@@ -1,8 +1,8 @@
 using BikeRental.Contracts.Dtos;
 using BikeRental.Contracts.Interfaces;
+using BikeRental.Domain;
 using BikeRental.Domain.Enums;
 using BikeRental.Domain.Models;
-using BikeRental.Domain;
 
 namespace BikeRental.Application.Services;
 

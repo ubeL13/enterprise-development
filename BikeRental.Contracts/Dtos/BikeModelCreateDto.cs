@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using BikeRental.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BikeRental.Contracts.Dtos;
 

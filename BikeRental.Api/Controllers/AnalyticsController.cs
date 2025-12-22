@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using BikeRental.Contracts.Interfaces;
 using BikeRental.Contracts.Dtos;
+using BikeRental.Contracts.Interfaces;
 using BikeRental.Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace BikeRental.Api.Controllers;
