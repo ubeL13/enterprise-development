@@ -38,6 +38,8 @@ builder.Services.AddScoped<IBikeModelService, BikeModelService>();
 builder.Services.AddScoped<IBikeService, BikeService>();
 builder.Services.AddScoped<IRentalService, RentalService>();
 builder.Services.AddScoped<IRenterService, RenterService>();
+builder.Services.AddScoped<BikeRentalDbSeeder>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -62,38 +64,11 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.MapDefaultEndpoints();
 
-/// <summary>
-/// Seeds initial data if the database is empty
-/// </summary>
-await SeedDataAsync(app.Services);
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<BikeRentalDbSeeder>();
+    await seeder.SeedAsync();
+}
+
 
 app.Run();
-
-/// <summary>
-/// Seeds the database with initial bike models, bikes, renters, and rentals
-/// </summary>
-static async Task SeedDataAsync(IServiceProvider services)
-{
-    using var scope = services.CreateScope();
-    var provider = scope.ServiceProvider;
-
-    var modelRepo = provider.GetRequiredService<IRepository<BikeModel>>();
-    var bikeRepo = provider.GetRequiredService<IRepository<Bike>>();
-    var renterRepo = provider.GetRequiredService<IRepository<Renter>>();
-    var rentalRepo = provider.GetRequiredService<IRepository<Rental>>();
-
-    if ((await modelRepo.GetAllAsync()).Count != 0)
-        return;
-
-    var models = DataSeeder.GetBikeModels();
-    foreach (var m in models) await modelRepo.CreateAsync(m);
-
-    var bikes = DataSeeder.GetBikes(models);
-    foreach (var b in bikes) await bikeRepo.CreateAsync(b);
-
-    var renters = DataSeeder.GetRenters();
-    foreach (var r in renters) await renterRepo.CreateAsync(r);
-
-    var rentals = DataSeeder.GetRentals(bikes, renters);
-    foreach (var r in rentals) await rentalRepo.CreateAsync(r);
-}
