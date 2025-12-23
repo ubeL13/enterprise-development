@@ -1,12 +1,11 @@
 using BikeRental.Application.Services;
 using BikeRental.Contracts.Interfaces;
 using BikeRental.Domain;
-using BikeRental.Domain.Models;
 using BikeRental.Infrastructure;
 using BikeRental.Infrastructure.Repositories;
 using BikeRental.Infrastructure.Settings;
-using Microsoft.EntityFrameworkCore;
 using BikeRental.ServiceDefaults;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
