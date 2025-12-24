@@ -6,6 +6,8 @@ using BikeRental.Infrastructure.Repositories;
 using BikeRental.Infrastructure.Settings;
 using BikeRental.ServiceDefaults;
 using Microsoft.EntityFrameworkCore;
+using BikeRental.Contracts.Grpc;
+using BikeRental.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,8 @@ builder.Services.AddDbContext<MongoDbContext>(options =>
     options.UseMongoDB(mongoConnectionString, "BikeRentalDb");
 });
 
+
+
 /// <summary>
 /// Registers repositories and application services
 /// </summary>
@@ -44,9 +48,34 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddGrpc(options =>
+{
+    options.EnableDetailedErrors = builder.Environment.IsDevelopment();
+});
+
+// gRPC CLIENT (подключение к генератору)
+builder.Services.AddGrpcClient<RentalIngestor.RentalIngestorClient>(o =>
+{
+    var addr = builder.Configuration["RentalIngestor:GrpcAddress"]
+        ?? throw new InvalidOperationException("RentalIngestor:GrpcAddress is not configured");
+
+    o.Address = new Uri(addr);
+});
+
+builder.Services.AddAutoMapper(typeof(Program));
+
+// Background gRPC client
+builder.Services.AddHostedService<BikeRentalGrpcClient>();
+
 var app = builder.Build();
 
-/// <summary>
+//using (var scope = app.Services.CreateScope())
+//{
+//    var seeder = scope.ServiceProvider.GetRequiredService<BikeRentalDbSeeder>();
+//    await seeder.SeedAsync();
+//}
+
+/// < summary >
 /// Configures Swagger for API documentation
 /// </summary>
 if (app.Environment.IsDevelopment())
@@ -63,11 +92,9 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.MapDefaultEndpoints();
 
-using (var scope = app.Services.CreateScope())
-{
-    var seeder = scope.ServiceProvider.GetRequiredService<BikeRentalDbSeeder>();
-    await seeder.SeedAsync();
-}
+
+
+
 
 
 app.Run();

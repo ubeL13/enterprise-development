@@ -4,7 +4,9 @@
 
 	<ItemGroup>
         <ProjectReference Include="..\BikeRental.Api\BikeRental.Api.csproj" />
-    </ItemGroup>
+		<ProjectReference Include="..\BikeRental.Generator.Grpc.Host\BikeRental.Generator.Grpc.Host.csproj" />
+		<ProjectReference Include="..\BikeRental.Generator.Grpc.Host\BikeRental.Generator.Grpc.Host.csproj" />
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.1" />
 		<PackageReference Include="Aspire.Hosting.MongoDB" Version="9.5.1" />
