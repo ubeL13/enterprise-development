@@ -1,19 +1,24 @@
-using AutoMapper;
 using BikeRental.Contracts.Grpc;
-using Grpc.Core;
 using BikeRental.Generator.Grpc.Host.Generator;
+using Grpc.Core;
 
 namespace BikeRental.Generator.Grpc.Host.Grpc;
 
+/// <summary>
+/// gRPC service for generating BikeRental rentals.
+/// Handles incoming requests for rental batch generation and sends the generated batches back to the client.
+/// </summary>
 public sealed class BikeRentalGrpcGeneratorService(
-    IConfiguration configuration,
-    IMapper mapper,
-    ILogger<BikeRentalGrpcGeneratorService> logger
+    IConfiguration configuration
 ) : RentalIngestor.RentalIngestorBase
 {
     private readonly int _defaultBatchSize = int.Parse(configuration["Generator:BatchSize"] ?? "10");
     private readonly int _waitTimeSeconds = int.Parse(configuration["Generator:WaitTime"] ?? "2");
 
+    /// <summary>
+    /// Bidirectional gRPC stream method.
+    /// Receives rental generation requests and sends batches of rental objects to the client.
+    /// </summary>
     public override async Task StreamRentals(
         IAsyncStreamReader<RentalGenerationRequest> requestStream,
         IServerStreamWriter<RentalBatchStreamMessage> responseStream,
@@ -34,6 +39,7 @@ public sealed class BikeRentalGrpcGeneratorService(
                     RequestId = req.RequestId,
                     IsFinal = sent + take >= req.Count
                 };
+
                 payload.Rentals.AddRange(rentals);
 
                 await responseStream.WriteAsync(payload);

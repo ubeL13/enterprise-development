@@ -10,7 +10,7 @@ var generator = builder.AddProject<Projects.BikeRental_Generator_Grpc_Host>("gen
     .WithEnvironment("Generator:BatchSize", batchSize)
     .WithEnvironment("Generator:WaitTime", waitTime);
 
-var api = builder.AddProject<Projects.BikeRental_Api>("api")
+builder.AddProject<Projects.BikeRental_Api>("api")
     .WithReference(mongo)
     .WithReference(generator)
     .WithEnvironment("RentalIngestor:GrpcAddress", generator.GetEndpoint("https"))

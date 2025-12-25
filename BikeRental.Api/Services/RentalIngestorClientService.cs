@@ -1,13 +1,9 @@
 using AutoMapper;
-using Grpc.Core;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Caching.Memory;
-
-using BikeRental.Contracts.Grpc;
 using BikeRental.Contracts.Dtos;
+using BikeRental.Contracts.Grpc;
 using BikeRental.Contracts.Interfaces;
+using Grpc.Core;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BikeRental.Api.Services;
 
@@ -24,7 +20,7 @@ public class BikeRentalGrpcClient(
     IMemoryCache cache
 ) : BackgroundService
 {
-    private static readonly TimeSpan CacheTtl = TimeSpan.FromMinutes(10);
+    private static readonly TimeSpan _cacheTtl = TimeSpan.FromMinutes(10);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -162,7 +158,7 @@ public class BikeRentalGrpcClient(
             exists,
             new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = CacheTtl
+                AbsoluteExpirationRelativeToNow = _cacheTtl
             }
         );
 

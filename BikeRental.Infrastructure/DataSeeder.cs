@@ -32,8 +32,8 @@ public static class SeedIds
 
 public static class DataSeeder
 {
-    public static List<BikeModel> GetBikeModels() => new()
-    {
+    public static List<BikeModel> GetBikeModels() =>
+    [
         new() { Id = SeedIds.Bike1, Name = "Speedster", Type = BikeType.Road, WheelSize = 28, MaxRiderWeight = 100, BikeWeight = 9.5, BrakeType = "Disc", ModelYear = 2023, HourlyRate = 15 },
         new() { Id = SeedIds.Bike2, Name = "Mountain Pro", Type = BikeType.Mountain, WheelSize = 29, MaxRiderWeight = 120, BikeWeight = 11.2, BrakeType = "Disc", ModelYear = 2024, HourlyRate = 20 },
         new() { Id = SeedIds.Bike3, Name = "CityRide", Type = BikeType.City, WheelSize = 27, MaxRiderWeight = 90, BikeWeight = 10.5, BrakeType = "Rim", ModelYear = 2022, HourlyRate = 12 },
@@ -44,10 +44,10 @@ public static class DataSeeder
         new() { Id = SeedIds.Bike8, Name = "SpeedMax", Type = BikeType.Sport, WheelSize = 28, MaxRiderWeight = 105, BikeWeight = 9.0, BrakeType = "Disc", ModelYear = 2024, HourlyRate = 28 },
         new() { Id = SeedIds.Bike9, Name = "VoltBike", Type = BikeType.Electric, WheelSize = 27, MaxRiderWeight = 120, BikeWeight = 19.5, BrakeType = "Disc", ModelYear = 2023, HourlyRate = 26 },
         new() { Id = SeedIds.Bike10, Name = "ClassicRide", Type = BikeType.City, WheelSize = 26, MaxRiderWeight = 85, BikeWeight = 12.0, BrakeType = "Rim", ModelYear = 2021, HourlyRate = 10 }
-    };
+    ];
 
-    public static List<Renter> GetRenters() => new()
-    {
+    public static List<Renter> GetRenters() =>
+    [
         new() { Id = SeedIds.Renter1, FullName = "Иванов Иван", Phone = "+7 999 111 11 11" },
         new() { Id = SeedIds.Renter2, FullName = "Петров Пётр", Phone = "+7 999 222 22 22" },
         new() { Id = SeedIds.Renter3, FullName = "Сидоров Сидор", Phone = "+7 999 333 33 33" },
@@ -58,10 +58,10 @@ public static class DataSeeder
         new() { Id = SeedIds.Renter8, FullName = "Егоров Андрей", Phone = "+7 999 888 88 88" },
         new() { Id = SeedIds.Renter9, FullName = "Смирнова Полина", Phone = "+7 999 999 99 99" },
         new() { Id = SeedIds.Renter10, FullName = "Орлова Елена", Phone = "+7 900 123 45 67" }
-    };
+    ];
 
-    public static List<Bike> GetBikes(List<BikeModel> models) => new()
-    {
+    public static List<Bike> GetBikes(List<BikeModel> models) =>
+    [
         new() { Id = SeedIds.Bike1, SerialNumber = "B001", Color = "Red", Model = models[0], ModelId = models[0].Id },
         new() { Id = SeedIds.Bike2, SerialNumber = "B002", Color = "Blue", Model = models[1], ModelId = models[1].Id },
         new() { Id = SeedIds.Bike3, SerialNumber = "B003", Color = "Black", Model = models[2], ModelId = models[2].Id },
@@ -72,10 +72,10 @@ public static class DataSeeder
         new() { Id = SeedIds.Bike8, SerialNumber = "B008", Color = "Green", Model = models[7], ModelId = models[7].Id },
         new() { Id = SeedIds.Bike9, SerialNumber = "B009", Color = "Purple", Model = models[8], ModelId = models[8].Id },
         new() { Id = SeedIds.Bike10, SerialNumber = "B010", Color = "Pink", Model = models[9], ModelId = models[9].Id }
-    };
+    ];
 
-    public static List<Rental> GetRentals(List<Bike> bikes, List<Renter> renters) => new()
-    {
+    public static List<Rental> GetRentals(List<Bike> bikes, List<Renter> renters) =>
+    [
         new() { Id = "rental-0001", Bike = bikes[0], BikeId = bikes[0].Id, Renter = renters[0], RenterId = renters[0].Id, StartTime = DateTime.Now.AddHours(-10), DurationHours = 2 },
         new() { Id = "rental-0002", Bike = bikes[1], BikeId = bikes[1].Id, Renter = renters[1], RenterId = renters[1].Id, StartTime = DateTime.Now.AddHours(-9), DurationHours = 5 },
         new() { Id = "rental-0003", Bike = bikes[2], BikeId = bikes[2].Id, Renter = renters[2], RenterId = renters[2].Id, StartTime = DateTime.Now.AddHours(-8), DurationHours = 3 },
@@ -86,5 +86,5 @@ public static class DataSeeder
         new() { Id = "rental-0008", Bike = bikes[7], BikeId = bikes[7].Id, Renter = renters[7], RenterId = renters[7].Id, StartTime = DateTime.Now.AddHours(-3), DurationHours = 3 },
         new() { Id = "rental-0009", Bike = bikes[8], BikeId = bikes[8].Id, Renter = renters[8], RenterId = renters[8].Id, StartTime = DateTime.Now.AddHours(-2), DurationHours = 5 },
         new() { Id = "rental-0010", Bike = bikes[9], BikeId = bikes[9].Id, Renter = renters[9], RenterId = renters[9].Id, StartTime = DateTime.Now.AddHours(-1), DurationHours = 4 }
-    };
+    ];
 }
