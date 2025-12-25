@@ -13,6 +13,7 @@
 
    <ItemGroup>
 	 <ProjectReference Include="..\BikeRental.Contracts\BikeRental.Contracts.csproj" />
+	 <ProjectReference Include="..\BikeRental.Infrastructure\BikeRental.Infrastructure.csproj" />
      <ProjectReference Include="..\BikeRental.ServiceDefaults\BikeRental.ServiceDefaults.csproj" />
    </ItemGroup>
 

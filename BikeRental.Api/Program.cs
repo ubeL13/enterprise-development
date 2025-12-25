@@ -65,15 +65,16 @@ builder.Services.AddGrpcClient<RentalIngestor.RentalIngestorClient>(o =>
 builder.Services.AddAutoMapper(typeof(Program));
 
 // Background gRPC client
+builder.Services.AddMemoryCache();
 builder.Services.AddHostedService<BikeRentalGrpcClient>();
 
 var app = builder.Build();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var seeder = scope.ServiceProvider.GetRequiredService<BikeRentalDbSeeder>();
-//    await seeder.SeedAsync();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<BikeRentalDbSeeder>();
+    await seeder.SeedAsync();
+}
 
 /// < summary >
 /// Configures Swagger for API documentation
