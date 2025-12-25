@@ -5,7 +5,6 @@ namespace BikeRental.Infrastructure;
 
 public static class SeedIds
 {
-    // Bikes
     public const string Bike1 = "bike-0001";
     public const string Bike2 = "bike-0002";
     public const string Bike3 = "bike-0003";
@@ -17,7 +16,6 @@ public static class SeedIds
     public const string Bike9 = "bike-0009";
     public const string Bike10 = "bike-0010";
 
-    // Renters
     public const string Renter1 = "renter-0001";
     public const string Renter2 = "renter-0002";
     public const string Renter3 = "renter-0003";

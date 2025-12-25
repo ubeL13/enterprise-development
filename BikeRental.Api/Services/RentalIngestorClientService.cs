@@ -8,8 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace BikeRental.Api.Services;
 
 /// <summary>
-/// Фоновый gRPC клиент для получения батчей RentalCreateDto
-/// и создания аренд в системе
+/// A background gRPC client for receiving RentalCreateDto batches and creating rentals in the system.
 /// </summary>
 public class BikeRentalGrpcClient(
     RentalIngestor.RentalIngestorClient client,
@@ -37,7 +36,6 @@ public class BikeRentalGrpcClient(
 
                 var requestId = Guid.NewGuid().ToString("N");
 
-                // отправляем запрос генератору
                 var writerTask = Task.Run(async () =>
                 {
                     await call.RequestStream.WriteAsync(new RentalGenerationRequest
@@ -117,7 +115,7 @@ public class BikeRentalGrpcClient(
     }
 
     /// <summary>
-    /// Проверка существования сущности по id с кешированием
+    /// Checking the existence of an entity by id with caching
     /// </summary>
     private async Task<bool> ExistsAsync<TEntity>(
         string id,
